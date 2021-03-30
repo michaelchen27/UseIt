@@ -10,5 +10,6 @@
     <color name="teal">#52BAB7</color>
     <color name="light_grey">#939393</color>
     <color name="transparent">#00000000</color>
+    <color name="red">#F00</color>
 
 </resources>

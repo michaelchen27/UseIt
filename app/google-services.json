@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "501325542619",
+    "project_id": "useit-dd32e",
+    "storage_bucket": "useit-dd32e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501325542619:android:7fe9a683b5d3d19d4148fe",
+        "android_client_info": {
+          "package_name": "umn.useit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501325542619-k9bi9dteeqgvlli07egflldgl0f8k1v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF_LBhnk5Hb7K8KbGNcXCr7kIF01ok-hE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501325542619-k9bi9dteeqgvlli07egflldgl0f8k1v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

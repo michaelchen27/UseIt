@@ -3,6 +3,7 @@ package umn.useit;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,11 +18,14 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mDotLayout;
     private SliderAdapter sliderAdapter;
     private TextView[] mDots;
+    public static Activity fa_main;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        fa_main = this;
 
         Button btn_sign_in = (Button) findViewById(R.id.btn_sign_in);
         Button btn_sign_up = (Button) findViewById(R.id.btn_sign_up);
@@ -33,14 +37,12 @@ public class MainActivity extends AppCompatActivity {
         mSlideViewPager.setAdapter(sliderAdapter);
 
 
-
         btn_sign_in.setOnClickListener(new View.OnClickListener() { // SIGN IN Button Click
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, SignInActivity.class));
             }
         });
-
 
         btn_sign_up.setOnClickListener(new View.OnClickListener() { // SIGN UP Button Click
             @Override

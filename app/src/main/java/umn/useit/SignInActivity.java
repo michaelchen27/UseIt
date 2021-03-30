@@ -1,21 +1,34 @@
 package umn.useit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
 public class SignInActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
+    private FirebaseAuth mAuth;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +36,57 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
 
         TextView signUpDirect = (TextView) findViewById(R.id.sign_up_direct);
+        Button login_button = (Button) findViewById(R.id.login_button);
+        TextInputEditText mEmail = (TextInputEditText) findViewById(R.id.email); //don't forget to change username -> email in XML too
+        TextInputEditText mPassword = (TextInputEditText) findViewById(R.id.password);
+        TextView errormsg = (TextView) findViewById(R.id.errormsg);
 
         // Enable back button on ActionBar
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         // Spinner for loading Indicator
-        ProgressBar spinner = (ProgressBar)findViewById(R.id.progressBar);
+        spinner = (ProgressBar)findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
+
+        // FirebaseAuth instance init
+        mAuth = FirebaseAuth.getInstance();
+
+        login_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = mEmail.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+
+                if(TextUtils.isEmpty(email)) {
+                    mEmail.setError("Email is required.");
+                    return;
+                }
+                if(TextUtils.isEmpty(password)) {
+                    mPassword.setError("Password is required.");
+                    return;
+                }
+
+                spinner.setVisibility(View.VISIBLE);
+                //Copy pasta from Firebase Documentation
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                            finish();
+                            MainActivity.fa_main.finish(); //finish MainActivity so when loggedIn user in HomePage presses back, it quits the app.
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        } else {
+                            spinner.setVisibility(View.GONE);
+                            Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            errormsg.setText("Authentication failed");
+                            updateUI(null);
+                        }
+                    } //onComplete()
+                });
+            } //onClick()
+        });
     } //onCreate()
 
     @Override //Back Button
@@ -45,4 +102,7 @@ public class SignInActivity extends AppCompatActivity {
     public void signUpDirect(View view) {
         startActivity(new Intent(this, SignUpActivity.class));
     }
+
+    private void updateUI(FirebaseUser currentUser) { }
+
 }
