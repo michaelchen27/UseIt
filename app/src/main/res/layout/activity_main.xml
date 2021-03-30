@@ -5,37 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/teal">
+    android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/logo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.203" />
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/slideViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/dotsLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/logo"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_sign_up"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:text="UseIt"
-        android:textSize="45dp"/>
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <Button
         android:id="@+id/btn_sign_in"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="50dp"
+        android:layout_margin="20dp"
         android:background="@drawable/btn_sign_in"
         android:text="Sign In"
         android:textColor="@color/black"
@@ -43,7 +37,7 @@
 
     <Button
         android:id="@+id/btn_sign_up"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
