@@ -54,15 +54,20 @@ public class SignInActivity extends AppCompatActivity {
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString();
 
                 if(TextUtils.isEmpty(email)) {
-                    mEmail.setError("Email is required.");
+                    mEmail.setError("Email is required!");
+                    return;
+                }
+                if (!email.matches(emailPattern)) {
+                    mEmail.setError("Invalid email address!");
                     return;
                 }
                 if(TextUtils.isEmpty(password)) {
-                    mPassword.setError("Password is required.");
+                    mPassword.setError("Password is required!");
                     return;
                 }
 
@@ -84,9 +89,9 @@ public class SignInActivity extends AppCompatActivity {
                             updateUI(null);
                         }
                     } //onComplete()
-                });
+                }); //addOnCompleteListener()
             } //onClick()
-        });
+        }); //setOnClickListener()
     } //onCreate()
 
     @Override //Back Button

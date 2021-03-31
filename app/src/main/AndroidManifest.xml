@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="umn.useit">
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,9 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UseIt">
-        <activity android:name=".MainActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".SignInActivity" android:label="Sign In"/>
-        <activity android:name=".SignUpActivity" android:label="Sign Up"/>
+        <activity
+            android:name=".ui.login.SignUpActivity"
+            android:label="@string/title_activity_sign_up"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".SignInActivity"
+            android:label="Sign In" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeActivity" />
+        <activity android:name=".SignUpActivity" />
     </application>
 
 </manifest>

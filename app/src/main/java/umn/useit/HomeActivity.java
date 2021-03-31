@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
     @Override
@@ -15,7 +17,13 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String email = user.getEmail();
+        String name = email .substring(0, email .indexOf("@"));
+
         Button btn_logout = (Button) findViewById(R.id.btn_logout);
+        TextView text = (TextView) findViewById(R.id.text);
+        text.setText("Welcome, " + name + "!");
 
         btn_logout.setOnClickListener(new View.OnClickListener() { // LOG OUT button clicked
             @Override
