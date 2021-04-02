@@ -9,4 +9,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="ask_problem">Ask Problem</string>
+    <string name="title_problem">Problem Title</string>
+    <string name="desc_problem">Problem Description</string>
+    <string name="add_photo">Add Photo</string>
+    <string name="submit_problem">Submit</string>
+    <string name="succeed">Succeed!</string>
+    <string name="go_back_home">Go back home</string>
+
 </resources>

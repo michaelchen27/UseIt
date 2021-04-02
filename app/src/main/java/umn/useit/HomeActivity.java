@@ -22,6 +22,7 @@ public class HomeActivity extends AppCompatActivity {
         String name = email .substring(0, email .indexOf("@"));
 
         Button btn_logout = (Button) findViewById(R.id.btn_logout);
+        Button btn_ask = (Button) findViewById(R.id.btn_ask);
         TextView text = (TextView) findViewById(R.id.text);
         text.setText("Welcome, " + name + "!");
 
@@ -31,6 +32,14 @@ public class HomeActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 startActivity(new Intent(HomeActivity.this, MainActivity.class));
+            }
+        });
+
+        btn_ask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, AskActivity.class);
+                startActivity(intent);
             }
         });
     } //onCreate()

@@ -29,6 +29,9 @@
         </activity>
         <activity android:name=".HomeActivity" />
         <activity android:name=".SignUpActivity" />
+        <activity android:name=".AskActivity"/>
+        <activity android:name=".SucceedActivity"/>
+
     </application>
 
 </manifest>
