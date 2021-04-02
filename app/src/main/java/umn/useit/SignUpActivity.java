@@ -78,6 +78,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                                 } else {
                                     Toast.makeText(SignUpActivity.this, "Register failed, please try again.", Toast.LENGTH_SHORT).show();
+                                    spinner.setVisibility(View.GONE);
                                     updateUI(null);
                                 }
                             } //onComplete()
