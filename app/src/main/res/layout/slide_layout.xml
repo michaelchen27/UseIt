@@ -5,15 +5,17 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <ImageView
+        android:src="@drawable/it_support"
         android:id="@+id/slide_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/slide_heading"/>
 
     <TextView
+        android:text="lmao"
         android:id="@+id/slide_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,6 +29,7 @@
         android:textStyle="bold"/>
 
     <TextView
+        android:text="lmao"
         android:id="@+id/slide_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
