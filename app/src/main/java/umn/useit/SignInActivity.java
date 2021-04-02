@@ -72,6 +72,7 @@ public class SignInActivity extends AppCompatActivity {
                 }
 
                 spinner.setVisibility(View.VISIBLE);
+                login_button.setText("LOGGING IN...");
                 //Copy pasta from Firebase Documentation
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -84,6 +85,7 @@ public class SignInActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
                             spinner.setVisibility(View.GONE);
+                            login_button.setText("LOGIN");
                             Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                             errormsg.setText("Authentication failed");
                             updateUI(null);

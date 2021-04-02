@@ -29,14 +29,14 @@ public class SliderAdapter extends PagerAdapter {
 
     public String[] slide_headings = {
             "Welcome to UseIt",
-            "Always online 24/7",
-            "Multiple Channel Support"
+            "Chat Platform",
+            "Easy access"
     };
 
     public String[] slide_descs = {
             "Solve your IT related problems with the help of experts",
-            "Get help anytime",
-            "Get help anywhere"
+            "Chat with experts from around the world",
+            "Get support using only your smartphone"
     };
 
     @Override
