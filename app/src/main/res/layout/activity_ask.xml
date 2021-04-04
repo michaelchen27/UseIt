@@ -18,12 +18,16 @@
     <EditText
         android:id="@+id/ProblemDesc"
         android:layout_width="350dp"
-        android:layout_height="55dp"
+        android:layout_height="wrap_content"
         android:hint="@string/desc_problem"
         app:layout_constraintTop_toBottomOf="@id/TitleProblem"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLength="2000"
+        android:maxLines="20"
         />
 
     <Button

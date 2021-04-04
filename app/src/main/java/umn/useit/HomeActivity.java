@@ -21,7 +21,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ac_home = this;
 
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
         String name = email .substring(0, email .indexOf("@"));
@@ -49,8 +48,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        });
-        //Bottom Nav
+        }); //Bottom Nav
     } //onCreate()
 
     @Override
