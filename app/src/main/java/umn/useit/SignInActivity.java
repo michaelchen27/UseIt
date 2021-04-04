@@ -81,7 +81,7 @@ public class SignInActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                             finish();
-                            MainActivity.fa_main.finish(); //finish MainActivity so when loggedIn user in HomePage presses back, it quits the app.
+                            MainActivity.ac_main.finish(); //finish MainActivity so when loggedIn user in HomePage presses back, it quits the app.
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
                             spinner.setVisibility(View.GONE);

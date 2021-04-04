@@ -8,7 +8,20 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello this is home"/>
+        android:text="Hello this is profile"/>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Logout"
+        android:drawableLeft="@drawable/ic_logout"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/red"
+        style="?android:attr/borderlessButtonStyle"/>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

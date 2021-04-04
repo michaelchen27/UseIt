@@ -18,14 +18,14 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mDotLayout;
     private SliderAdapter sliderAdapter;
     private TextView[] mDots;
-    public static Activity fa_main;
+    public static Activity ac_main;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fa_main = this;
+        ac_main = this;
 
         Button btn_sign_in = (Button) findViewById(R.id.btn_sign_in);
         Button btn_sign_up = (Button) findViewById(R.id.btn_sign_up);
@@ -85,5 +85,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageScrollStateChanged(int state) {}
     };
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
 }

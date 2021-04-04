@@ -72,7 +72,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     updateUI(user);
                                     finish();
-                                    MainActivity.fa_main.finish(); //finish MainActivity so when loggedIn user in HomePage presses back, it quits the app.
+                                    MainActivity.ac_main.finish(); //finish MainActivity so when loggedIn user in HomePage presses back, it quits the app.
                                     Toast.makeText(SignUpActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
                                     spinner.setVisibility(View.GONE);
                                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
