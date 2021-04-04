@@ -11,8 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UseIt">
-
-        <activity android:name=".SplashActivity"
+        <activity android:name=".ProfileActivity"></activity>
+        <activity
+            android:name=".SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,28 +21,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <activity android:name=".SignInActivity"
-            android:screenOrientation="portrait"
-            android:label="Sign In" />
-
-        <activity android:name=".SignUpActivity"
-            android:screenOrientation="portrait"
-            android:label="Sign Up"/>
-
-        <activity android:name=".HomeActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
-        <activity android:name=".AskActivity"
-            android:label="What do you need help with?"/>
-
-        <activity android:name=".SucceedActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
+        <activity
+            android:name=".SignInActivity"
+            android:label="Sign In"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HomeActivity"
+            android:label="Home"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SignUpActivity"
+            android:label="Sign Up"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AskActivity"
+            android:label="What do you need help with?" />
+        <activity
+            android:name=".SucceedActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>
