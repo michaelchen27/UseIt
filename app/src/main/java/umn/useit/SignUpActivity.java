@@ -1,5 +1,6 @@
 package umn.useit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -75,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     MainActivity.ac_main.finish(); //finish MainActivity so when loggedIn user in HomePage presses back, it quits the app.
                                     Toast.makeText(SignUpActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
                                     spinner.setVisibility(View.GONE);
-                                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                                    startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                                 } else {
                                     Toast.makeText(SignUpActivity.this, "Register failed, please try again.", Toast.LENGTH_SHORT).show();
                                     spinner.setVisibility(View.GONE);

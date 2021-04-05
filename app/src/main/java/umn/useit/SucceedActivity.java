@@ -19,7 +19,7 @@ public class SucceedActivity extends AppCompatActivity {
         mbtn_go_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SucceedActivity.this, HomeActivity.class);
+                Intent intent = new Intent(SucceedActivity.this, DashboardActivity.class);
                 startActivity(intent);
             }
         });

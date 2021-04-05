@@ -82,7 +82,7 @@ public class SignInActivity extends AppCompatActivity {
                             updateUI(user);
                             finish();
                             MainActivity.ac_main.finish(); //finish MainActivity so when loggedIn user in HomePage presses back, it quits the app.
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                         } else {
                             spinner.setVisibility(View.GONE);
                             login_button.setText("LOGIN");
