@@ -16,5 +16,7 @@
     <string name="submit_problem">Submit</string>
     <string name="succeed">Succeed!</string>
     <string name="go_back_home">Go back home</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

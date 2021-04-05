@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
                 // Check if user is signed in (non-null) and update UI accordingly.
                 FirebaseUser currentUser = mAuth.getCurrentUser();
                 if(currentUser != null){
-                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
                 } else {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 }
