@@ -1,6 +1,7 @@
 package umn.useit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,8 +48,7 @@ public class HomeFragment extends Fragment {
 
         //Firebase
         FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
+//      FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         //GUI
         welcome = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.welcome);
@@ -56,22 +56,21 @@ public class HomeFragment extends Fragment {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference databaseUsers = database.getReference("users");
         String id = curr_user.getUid();
-        DatabaseReference firstname = databaseUsers.child(id).child("firstname");
+        DatabaseReference userRow = databaseUsers.child(id);
 
-        firstname.runTransaction(new Transaction.Handler() {
+        userRow.runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                String name = mutableData.getValue(String.class);
+                User user = mutableData.getValue(User.class);
                 return Transaction.success(mutableData);
             }
 
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-                String firstname = dataSnapshot.getValue(String.class);
-                if(firstname != null)
-                    welcome.setText("Hi, " + firstname + "!");
+                User user = dataSnapshot.getValue(User.class);
+                if(user != null) welcome.setText(String.format("Hi, %s %s!", user.getFirstname(), user.getLastname()));
             }
-        });
+        }); //runTransaction()
     } //onViewCreated()
 }

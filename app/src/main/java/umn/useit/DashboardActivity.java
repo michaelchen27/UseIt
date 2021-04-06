@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,42 +15,49 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    TextView welcome;
+    private BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        welcome = findViewById(R.id.welcome);
+        bottomNav = findViewById(R.id.bottom_navigation);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
         //Bottom Nav
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
                 switch(menuItem.getItemId()) {
-                        case R.id.nav_home:
+                    case R.id.nav_home:
+
+                        if (!(currFragment instanceof HomeFragment)) {
                             transaction.setCustomAnimations(
                                     R.anim.enter_left_to_right, //enter
                                     R.anim.exit_left_to_right); //exit
-                            changeFragment(transaction, new HomeFragment(), "HOME_FRAGMENT");
+                        }
+
+                        changeFragment(transaction, new HomeFragment(), "HOME_FRAGMENT");
 
                             break;
                         case R.id.nav_ask:
-                            transaction.setCustomAnimations(
-                                    R.anim.enter_down_to_up,
-                                    R.anim.exit_down_to_up);
+
+                            if (!(currFragment instanceof AskFragment)) {
+                                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                            }
                             changeFragment(transaction, new AskFragment(), "ASK_FRAGMENT");
 
                             break;
                         case R.id.nav_profile:
-                            transaction.setCustomAnimations(
-                                    R.anim.enter_right_to_left,
-                                    R.anim.exit_right_to_left);
+                            if (!(currFragment instanceof ProfileFragment)) {
+                                transaction.setCustomAnimations(
+                                        R.anim.enter_right_to_left,
+                                        R.anim.exit_right_to_left);
+                            }
                             changeFragment(transaction, new ProfileFragment(), "PROFILE_FRAGMENT");
 
                             break;
@@ -57,8 +65,8 @@ public class DashboardActivity extends AppCompatActivity {
                 return true;
             }
         }); //Bottom Nav
-    } //onCreate()
 
+    } //onCreate()
 
     public void changeFragment(FragmentTransaction transaction, Fragment f, String tag) {
         transaction
@@ -66,4 +74,11 @@ public class DashboardActivity extends AppCompatActivity {
         .commit();
     }
 
+    public void viewNotification(View view) {
+        startActivity(new Intent(this, NotificationActivity.class));
+    }
+
+    public void viewChat(View view) {
+        startActivity(new Intent(this, ChatActivity.class));
+    }
 }
