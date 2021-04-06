@@ -10,6 +10,6 @@
             android:layout_height="match_parent"
             android:textSize="30dp"
             android:textColor="@color/black"
-            android:text="Hello this is home"/>
+            android:text="Hi,"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
