@@ -48,7 +48,6 @@ public class HomeFragment extends Fragment {
 
         //Firebase
         FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
-//      FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         //GUI
         welcome = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.welcome);
