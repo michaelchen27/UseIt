@@ -54,8 +54,4 @@
         android:textColor="@color/black"
         android:gravity="center" />
 
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
