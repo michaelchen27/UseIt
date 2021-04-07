@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCardViewHolder> {
-    private List<String> mData;
-    private LayoutInflater mInflater;
+    private final List<String> mData;
+    private final LayoutInflater mInflater;
 
     //Interface is defined at the bottom.
     private ItemClickListener mClickListener;
@@ -25,6 +25,7 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
     }
 
     //Inflates card layout(home_card.xml) to the ViewHolder (HomeCardViewHolder).
+    @NonNull
     @Override
     public HomeCardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.home_card, parent, false);
