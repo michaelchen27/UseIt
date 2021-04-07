@@ -6,6 +6,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="teal">#52BAB7</color>
     <color name="light_teal">#B5F6F4</color>
+    <color name="high_contrast_teal">#68EDE9</color>
     <color name="light_grey">#939393</color>
     <color name="grey">#676767</color>
     <color name="transparent">#00000000</color>

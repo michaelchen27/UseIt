@@ -9,19 +9,89 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="20dp"
         app:cardUseCompatPadding="true"
         app:cardPreventCornerOverlap="true">
 
-        <TextView
-            android:id="@+id/title_problem"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="24sp"
-            android:textColor="@color/black"/>
+            android:padding="20dp">
 
+            <TextView
+                android:id="@+id/title_problem"
+                android:text="Lmao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="24sp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/by"
+                android:text="by "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/title_problem"
+                app:layout_constraintLeft_toLeftOf="@id/title_problem"
+                android:textSize="14sp"
+                android:textColor="@color/light_grey"/>
+
+            <TextView
+                android:id="@+id/poster"
+                android:text="Michael"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/title_problem"
+                app:layout_constraintLeft_toRightOf="@id/by"
+                android:textSize="14sp"
+                android:textColor="@color/teal"/>
+
+            <TextView
+                android:id="@+id/date"
+                android:text="31 Maret 2021"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/by"
+                app:layout_constraintLeft_toLeftOf="@id/title_problem"
+                android:textSize="14sp"
+                android:textColor="@color/light_grey"/>
+
+            <LinearLayout
+                android:id="@+id/seen_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/eye"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_eye"/>
+
+                <TextView
+                    android:id="@+id/seen"
+                    android:text="201"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/light_grey"/>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:backgroundTint="@color/teal_200"
+                android:text="Solve"
+                android:textColor="@color/white"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
 </LinearLayout>

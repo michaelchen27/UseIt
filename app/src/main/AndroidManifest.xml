@@ -15,7 +15,8 @@
 
         <activity android:name=".ChatActivity"/>
         <activity android:name=".NotificationActivity" />
-        <activity android:name=".DashboardActivity" />
+        <activity android:name=".DashboardActivity"
+            android:theme="@style/Theme.UseIt.NoActionBar" />
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait">
