@@ -77,20 +77,10 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
 
         // POPULATE
         ArrayList<String> problemTitles = new ArrayList<>();
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
-        problemTitles.add("Poyo");
+        problemTitles.add("Headphone not recognized in Windows 10!");
+        problemTitles.add("Keyboard ghosting!");
+        problemTitles.add("Redtooth not working!!");
+        problemTitles.add("How to win an argument against a flat-earther?");
 
         //Setup RecyclerView
         RecyclerView recyclerView = getView().findViewById(R.id.rvHomeCard);
@@ -103,6 +93,6 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number" + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), adapter.getItem(position), Toast.LENGTH_SHORT).show();
     }
 }

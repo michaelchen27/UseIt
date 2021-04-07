@@ -11,10 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UseIt">
-        <activity android:name=".ChatActivity"></activity>
+
+
+        <activity android:name=".ChatActivity"/>
         <activity android:name=".NotificationActivity" />
-        <activity android:name=".DashboardActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".DashboardActivity" />
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait">
