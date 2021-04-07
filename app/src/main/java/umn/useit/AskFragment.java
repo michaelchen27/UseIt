@@ -1,7 +1,11 @@
 package umn.useit;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +16,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
 
 public class AskFragment extends Fragment {
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
     private DatabaseReference root = db.getReference().child("Problems");
 
     @Nullable
@@ -42,17 +52,44 @@ public class AskFragment extends Fragment {
             public void onClick(View v) {
                 String title_problem = etTitleProblem.getText().toString();
                 String problem_desc = etProblemDesc.getText().toString();
+                String user_email = mAuth.getCurrentUser().getEmail();
+                int index = user_email.indexOf('@');
+                user_email = user_email.substring(0,index);
 
-                HashMap<String, String> problemMap = new HashMap<>();
+                int total = getPostAmount(); //buggy code
+                storeProblemData(total ,title_problem, problem_desc, user_email);
 
-                problemMap.put("title", title_problem);
-                problemMap.put("desc", problem_desc);
+//                HashMap<String, String> problemMap = new HashMap<>();
+//
+//                problemMap.put("title", title);
+//                problemMap.put("desc", desc);
+//                root.push().setValue(problemMap);
 
-                root.push().setValue(problemMap);
-
-                Intent intent = new Intent(getActivity(), SucceedActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getActivity(), SucceedActivity.class));
+                getActivity().finish();
             }
         });
+
+
+
+    } //onViewCreated()
+
+
+
+    private void storeProblemData(int id, String title, String desc, String poster) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference dbUser = db.getReference().child("Problems");
+        DateFormat df = new SimpleDateFormat("d MMM yy · HH:mm ");
+        String date = df.format(Calendar.getInstance().getTime());
+
+
+        Problem problem = new Problem(title, desc, poster, date, "0");
+
+        dbUser.child(String.valueOf(id)).setValue(problem); //currently broken, generate unique id!
+    }
+
+    private int getPostAmount() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        return prefs.getInt("postTotal",0);
     }
 }

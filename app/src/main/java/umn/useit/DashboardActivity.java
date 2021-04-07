@@ -34,53 +34,9 @@ public class DashboardActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         fm.beginTransaction().add(R.id.fragment_container, fProfile, "PROFILE_FRAGMENT").hide(fProfile).commit();
         fm.beginTransaction().add(R.id.fragment_container, fAsk, "ASK_FRAGMENT").hide(fAsk).commit();
         fm.beginTransaction().add(R.id.fragment_container,fHome, "HOME_FRAGMENT").commit();
-
-//Previous BottomNav Fragment, kept for reference.
-        /*
-        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                Fragment currFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
-                switch(menuItem.getItemId()) {
-                    case R.id.nav_home:
-
-                        if (!(currFragment instanceof HomeFragment)) {
-                            transaction.setCustomAnimations(
-                                    R.anim.enter_left_to_right, //enter
-                                    R.anim.exit_left_to_right); //exit
-                        }
-
-                        changeFragment(transaction, new HomeFragment(), "HOME_FRAGMENT");
-
-                            break;
-                        case R.id.nav_ask:
-
-                            if (!(currFragment instanceof AskFragment)) {
-                                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                            }
-                            changeFragment(transaction, new AskFragment(), "ASK_FRAGMENT");
-
-                            break;
-                        case R.id.nav_profile:
-                            if (!(currFragment instanceof ProfileFragment)) {
-                                transaction.setCustomAnimations(
-                                        R.anim.enter_right_to_left,
-                                        R.anim.exit_right_to_left);
-                            }
-                            changeFragment(transaction, new ProfileFragment(), "PROFILE_FRAGMENT");
-
-                            break;
-                    }
-                return true;
-            }
-        }); //Bottom Nav
-         */
 
     } //onCreate()
 

@@ -12,14 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCardViewHolder> {
-    private final List<String> mData;
+    private final List<Problem> mData;
     private final LayoutInflater mInflater;
 
     //Interface is defined at the bottom.
     private ItemClickListener mClickListener;
 
     //Constructor
-    HomeCardAdapter(Context context, List<String> data) {
+    HomeCardAdapter(Context context, List<Problem> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -27,7 +27,7 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
     //Inflates card layout(home_card.xml) to the ViewHolder (HomeCardViewHolder).
     @NonNull
     @Override
-    public HomeCardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HomeCardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.home_card, parent, false);
         return new HomeCardViewHolder(view);
     }
@@ -35,8 +35,11 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
     //Binds data to the Card in each row
     @Override
     public void onBindViewHolder(@NonNull HomeCardViewHolder holder, int position) {
-        String title_problem = mData.get(position);
-        holder.tvTitleProblem.setText(title_problem);
+        Problem problem = mData.get(position);
+        holder.tvTitleProblem.setText(problem.getTitleProblem());
+        holder.tvPoster.setText(problem.getPoster());
+        holder.tvDate.setText(problem.getDate());
+        holder.tvSeen.setText(problem.getSeen());
     }
 
     //Total number of cards/rows
@@ -48,11 +51,14 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
     //Store and recycler the views as they are scrolled off screen.
     public class HomeCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvTitleProblem;
+        TextView tvTitleProblem, tvPoster, tvDate, tvSeen;
 
         public HomeCardViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitleProblem = itemView.findViewById(R.id.title_problem);
+            tvPoster = itemView.findViewById(R.id.poster);
+            tvDate = itemView.findViewById(R.id.date);
+            tvSeen = itemView.findViewById(R.id.seen);
             itemView.setOnClickListener(this);
         }
 
@@ -63,7 +69,7 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
         }
     }
 
-    String getItem(int id) {
+    Problem getItem(int id) {
         return mData.get(id);
     }
 
