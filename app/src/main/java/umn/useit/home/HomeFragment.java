@@ -1,4 +1,4 @@
-package umn.useit;
+package umn.useit.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import umn.useit.DetailActivity;
+import umn.useit.R;
+import umn.useit.model.Problem;
+import umn.useit.model.User;
+
 public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickListener {
 
     //Firebase
@@ -40,6 +45,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
 
     HomeCardAdapter adapter;
     ArrayList<String> problemTitles = new ArrayList<>();
+    User user;
     private TextView welcome;
     private TextView level;
     private TextView asked;
@@ -55,9 +61,9 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         super.onViewCreated(view, savedInstanceState);
 
         //GUI Init
-        welcome = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.welcome);
-        level = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.level);
-        asked = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.asked);
+        welcome = Objects.requireNonNull(getView()).findViewById(R.id.welcome);
+        level = Objects.requireNonNull(getView()).findViewById(R.id.level);
+        asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
 
         // Init =============================================================================
         FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
@@ -81,18 +87,23 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
 
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
+                user = dataSnapshot.getValue(User.class);
                 if (user != null)
                     welcome.setText(String.format("Hi, %s %s!", user.getFirstname(), user.getLastname()));
             }
         }); //runTransaction()
 
-
-        //Get User's Post
+        //Get All User's Post
         Query query = databaseProblems.orderByChild("date");
-        getDB(query);
+        List<Problem> problems = new ArrayList<>();
+        problems = getDB(query, problems);
+        showCards(problems);
+        sendTotal(problems.size());
+
     } //onViewCreated()
 
+    /*  Show cards on Homescreen using RecyclerView. Firebase doesn't provide descending order query,
+        so I will have to reverse the list order.*/
     public void showCards(List<Problem> problems) {
         RecyclerView recyclerView = getView().findViewById(R.id.rvHomeCard);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -103,26 +114,23 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         recyclerView.setAdapter(adapter);
     } //showCards()
 
-
+    //Save total post in local data. AskFragment will use the total number as post ID
     public void sendTotal(int total) {
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .edit()
-                .putInt("postTotal", total).apply(); //buggy when firebase db is cleared.
+                .putInt("postTotal", total).apply(); //TODO: fix the cleared DB bug!
     } //sendTotal()
 
-
-    public void getDB(Query query) {
+    //Get data from DB with ListenerForSingleValueEvent
+    public List<Problem> getDB(Query query, List<Problem> list) {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Problem> problems = new ArrayList<>();
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Problem problem = dataSnapshot.getValue(Problem.class);
-                        problems.add(problem);
+                        list.add(problem);
                     }
-                    showCards(problems);
-                    sendTotal(problems.size());
                 }
             }
 
@@ -130,9 +138,11 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             public void onCancelled(@NonNull DatabaseError error) {
             }
         }); //Get User's Post
-
+        return list;
     } //getDB()
 
+
+    //Increment view if a post is viewed. Send title and desc to detail via intent.
     @Override
     public void onItemClick(View view, int position) {
         String title = adapter.getItem(position).getTitleProblem();

@@ -1,7 +1,4 @@
-package umn.useit;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+package umn.useit.prehome;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,14 +9,32 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
+import umn.useit.R;
+
 public class MainActivity extends AppCompatActivity {
 
+    public static Activity ac_main;
     private ViewPager mSlideViewPager;
     private LinearLayout mDotLayout;
     private SliderAdapter sliderAdapter;
     private TextView[] mDots;
-    public static Activity ac_main;
+    ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() { //Slide change listener
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
 
+        @Override
+        public void onPageSelected(int position) {
+            addDotsIndicator(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ac_main = this;
 
-        Button btn_sign_in = (Button) findViewById(R.id.btn_sign_in);
-        Button btn_sign_up = (Button) findViewById(R.id.btn_sign_up);
+        Button btn_sign_in = findViewById(R.id.btn_sign_in);
+        Button btn_sign_up = findViewById(R.id.btn_sign_up);
 
-        mSlideViewPager = (ViewPager) findViewById(R.id.slideViewPager);
-        mDotLayout = (LinearLayout) findViewById(R.id.dotsLayout);
+        mSlideViewPager = findViewById(R.id.slideViewPager);
+        mDotLayout = findViewById(R.id.dotsLayout);
 
         sliderAdapter = new SliderAdapter(this);
         mSlideViewPager.setAdapter(sliderAdapter);
@@ -56,11 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
     } //onCreate()
 
-
     public void addDotsIndicator(int position) { // Dots Indicator for Slider
         mDots = new TextView[3];
         mDotLayout.removeAllViews();
-        for(int i = 0; i < mDots.length; i++) {
+        for (int i = 0; i < mDots.length; i++) {
 
             mDots[i] = new TextView(this);
             mDots[i].setText(Html.fromHtml("&#8226;"));
@@ -70,21 +84,10 @@ public class MainActivity extends AppCompatActivity {
             mDotLayout.addView(mDots[i]);
         }
 
-        if(mDots.length > 0) {
+        if (mDots.length > 0) {
             mDots[position].setTextColor(getResources().getColor(R.color.teal));
         }
     }
-
-    ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() { //Slide change listener
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-        @Override
-        public void onPageSelected(int position) { addDotsIndicator(position);}
-
-        @Override
-        public void onPageScrollStateChanged(int state) {}
-    };
 
     @Override
     public void onBackPressed() {

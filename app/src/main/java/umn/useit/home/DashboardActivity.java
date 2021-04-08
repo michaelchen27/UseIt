@@ -1,20 +1,17 @@
-package umn.useit;
+package umn.useit.home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,11 +19,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import umn.useit.AskFragment;
+import umn.useit.ChatActivity;
+import umn.useit.NotificationActivity;
+import umn.useit.ProfileFragment;
+import umn.useit.R;
+import umn.useit.model.Problem;
 
 public class DashboardActivity extends AppCompatActivity {
 
