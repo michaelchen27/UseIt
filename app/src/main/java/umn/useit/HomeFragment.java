@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,25 +27,22 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickListener{
-
-    private TextView welcome;
-    private TextView level;
-    private TextView asked;
-    FragmentManager fm = getFragmentManager();
-
-    HomeCardAdapter adapter;
-    ArrayList<String> problemTitles = new ArrayList<>();
+public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickListener {
 
     //Firebase
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference databaseUsers = database.getReference("Users");
     private final DatabaseReference databaseProblems = database.getReference("Problems");
+    FragmentManager fm = getFragmentManager();
+
+    HomeCardAdapter adapter;
+    ArrayList<String> problemTitles = new ArrayList<>();
+    private TextView welcome;
+    private TextView level;
+    private TextView asked;
 
     @Nullable
     @Override
@@ -71,7 +67,6 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
                 .putInt("postTotal", 999999999).apply(); //lol
 
 
-
         String curr_userUid = curr_user.getUid();
         DatabaseReference userRow = databaseUsers.child(curr_userUid);
 
@@ -87,7 +82,8 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if(user != null) welcome.setText(String.format("Hi, %s %s!", user.getFirstname(), user.getLastname()));
+                if (user != null)
+                    welcome.setText(String.format("Hi, %s %s!", user.getFirstname(), user.getLastname()));
             }
         }); //runTransaction()
 
@@ -131,7 +127,8 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         }); //Get User's Post
 
     } //getDB()
