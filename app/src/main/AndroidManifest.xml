@@ -14,8 +14,11 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
-            android:theme="@style/Theme.UseIt.NoActionBar"></activity>
-        <activity android:name=".ChatActivity" />
+            android:theme="@style/Theme.UseIt.NoActionBar" />
+
+        <activity
+            android:name=".ChatActivity"
+            android:theme="@style/Theme.UseIt.NoActionBar" />
         <activity android:name=".NotificationActivity" />
         <activity
             android:name=".DashboardActivity"

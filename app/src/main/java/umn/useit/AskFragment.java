@@ -31,9 +31,9 @@ import java.util.Objects;
 
 public class AskFragment extends Fragment {
 
-    private final FirebaseDatabase db = FirebaseDatabase.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+    private final FirebaseDatabase db = FirebaseDatabase.getInstance();
     private final DatabaseReference databaseProblems = db.getReference().child("Problems");
 
     @Nullable

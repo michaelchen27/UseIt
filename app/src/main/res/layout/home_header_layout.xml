@@ -1,130 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlayout_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView android:id="@+id/header_waves"
+    <ImageView
+        android:id="@+id/header_waves"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/waves"
         android:layout_alignParentTop="true"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:src="@drawable/waves" />
 
-    <LinearLayout android:id="@+id/button_panel"
+    <LinearLayout
+        android:id="@+id/button_panel"
         android:layout_width="100dp"
         android:layout_height="30dp"
-        android:orientation="horizontal"
         android:layout_alignTop="@id/header_waves"
         android:layout_alignEnd="@id/header_waves"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
         android:weightSum="2">
 
-        <ImageView android:id="@+id/chat"
-            android:layout_weight="1"
+        <ImageView
+            android:id="@+id/chat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/chat"
             android:layout_marginHorizontal="10dp"
-            android:onClick="viewChat"/>
-
-        <ImageView android:id="@+id/bell"
             android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:onClick="viewChat"
+            android:src="@drawable/chat" />
+
+        <ImageView
+            android:id="@+id/bell"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/bell"
-            android:onClick="viewNotification"/>
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:onClick="viewNotification"
+            android:src="@drawable/bell" />
 
     </LinearLayout>
 
-    <TextView android:id="@+id/welcome"
+    <TextView
+        android:id="@+id/welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="40sp"
-        android:textColor="@color/grey"
-        android:text="Hi,"
         android:layout_alignTop="@id/button_panel"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="50dp"
-        android:layout_marginHorizontal="20dp"/>
+        android:text="Hi,"
+        android:textColor="@color/grey"
+        android:textSize="40sp" />
 
-    <ImageView android:id="@+id/show_level"
-        android:layout_alignStart="@id/welcome"
-        android:layout_alignTop="@id/welcome"
+    <ImageView
+        android:id="@+id/show_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@id/welcome"
+        android:layout_alignTop="@id/welcome"
         android:layout_marginTop="55dp"
-        android:src="@drawable/level_bg"/>
+        android:src="@drawable/level_bg" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignTop="@id/show_level" android:layout_alignBottom="@id/show_level"
-        android:layout_alignStart="@id/show_level" android:layout_alignEnd="@id/show_level"
-        android:gravity="center">
+        android:layout_alignStart="@id/show_level"
+        android:layout_alignTop="@id/show_level"
+        android:layout_alignEnd="@id/show_level"
+        android:layout_alignBottom="@id/show_level"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Level "
-            android:textSize="20sp"
-            android:textColor="@color/teal" />
+            android:textColor="@color/teal"
+            android:textSize="20sp" />
 
-        <TextView android:id="@+id/level"
+        <TextView
+            android:id="@+id/level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
-            android:textSize="20sp"
-            android:textColor="@color/teal" />
+            android:textColor="@color/teal"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <!--Asked-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignBottom="@id/header_waves"
         android:layout_alignLeft="@id/show_level"
-        android:layout_marginBottom="15dp">
+        android:layout_alignBottom="@id/header_waves"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
 
-        <TextView android:id="@+id/asked"
+        <TextView
+            android:id="@+id/asked"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="0"
-            android:textStyle="bold"
-            android:textSize="25sp"/>
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" Asked"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
     </LinearLayout>
 
     <!--Solved-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignRight="@id/button_panel"
         android:layout_alignBottom="@id/header_waves"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
 
-        <TextView android:id="@+id/solved"
+        <TextView
+            android:id="@+id/solved"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="0"
-            android:textStyle="bold"
-            android:textSize="25sp"/>
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" Solved"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
     </LinearLayout>
 </RelativeLayout>
