@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
         holder.tvTitleProblem.setText(problem.getTitleProblem());
         holder.tvPoster.setText(problem.getPoster());
         holder.tvDate.setText(problem.getDate());
-        holder.tvSeen.setText(problem.getSeen());
+        holder.tvSeen.setText(String.valueOf(problem.getSeen()));
     }
 
     //Total number of cards/rows
@@ -52,6 +53,7 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
     public class HomeCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvTitleProblem, tvPoster, tvDate, tvSeen;
+        Button btn_view;
 
         public HomeCardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,13 +61,13 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
             tvPoster = itemView.findViewById(R.id.poster);
             tvDate = itemView.findViewById(R.id.date);
             tvSeen = itemView.findViewById(R.id.seen);
-            itemView.setOnClickListener(this);
+            btn_view = itemView.findViewById(R.id.btn_view);
+            btn_view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if(mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-
         }
     }
 
