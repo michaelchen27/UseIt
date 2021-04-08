@@ -1,4 +1,4 @@
-package umn.useit;
+package umn.useit.home;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import umn.useit.R;
+import umn.useit.model.Problem;
 
 public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCardViewHolder> {
     private final List<Problem> mData;

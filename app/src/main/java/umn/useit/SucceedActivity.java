@@ -7,6 +7,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import umn.useit.home.DashboardActivity;
+
 public class SucceedActivity extends AppCompatActivity {
 
 

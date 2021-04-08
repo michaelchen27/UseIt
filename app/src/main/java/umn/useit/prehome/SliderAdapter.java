@@ -1,4 +1,4 @@
-package umn.useit;
+package umn.useit.prehome;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,33 +11,32 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
+import umn.useit.R;
+
 public class SliderAdapter extends PagerAdapter {
 
+    //Arrays
+    public int[] slide_images = {
+            R.drawable.it_support,
+            R.drawable.clock,
+            R.drawable.phone
+    };
+    public String[] slide_headings = {
+            "Welcome to UseIt",
+            "Chat Platform",
+            "Easy access"
+    };
+    public String[] slide_descs = {
+            "Solve your IT related problems with the help of experts",
+            "Chat with experts from around the world",
+            "Get support using only your smartphone"
+    };
     Context context;
     LayoutInflater layoutInflater;
 
     public SliderAdapter(Context context) {
         this.context = context;
     }
-
-    //Arrays
-    public int[] slide_images =  {
-            R.drawable.it_support,
-            R.drawable.clock,
-            R.drawable.phone
-    };
-
-    public String[] slide_headings = {
-            "Welcome to UseIt",
-            "Chat Platform",
-            "Easy access"
-    };
-
-    public String[] slide_descs = {
-            "Solve your IT related problems with the help of experts",
-            "Chat with experts from around the world",
-            "Get support using only your smartphone"
-    };
 
     @Override
     public int getCount() {
@@ -46,19 +45,19 @@ public class SliderAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == (ConstraintLayout) object;
+        return view == object;
     }
 
 
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.slide_layout, container, false);
 
-        ImageView slideImageVIew = (ImageView) view.findViewById(R.id.slide_image);
-        TextView slideHeading = (TextView) view.findViewById(R.id.slide_heading);
-        TextView slideDescription = (TextView) view.findViewById(R.id.slide_desc);
+        ImageView slideImageVIew = view.findViewById(R.id.slide_image);
+        TextView slideHeading = view.findViewById(R.id.slide_heading);
+        TextView slideDescription = view.findViewById(R.id.slide_desc);
 
         slideImageVIew.setImageResource(slide_images[position]);
         slideHeading.setText(slide_headings[position]);

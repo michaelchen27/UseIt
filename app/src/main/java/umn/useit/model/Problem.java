@@ -1,4 +1,4 @@
-package umn.useit;
+package umn.useit.model;
 
 import java.util.Date;
 
