@@ -4,17 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,20 +26,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.zip.Inflater;
 
 public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickListener{
 
     private TextView welcome;
+    private TextView level;
+    private TextView asked;
+    FragmentManager fm = getFragmentManager();
+
+
     HomeCardAdapter adapter;
+    ArrayList<String> problemTitles = new ArrayList<>();
 
     @Nullable
     @Override
@@ -52,14 +57,26 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
 
         //GUI Init
         welcome = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.welcome);
+        level = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.level);
+        asked = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.asked);
 
         //Firebase
         FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference databaseUsers = database.getReference("users");
-        String id = curr_user.getUid();
-        DatabaseReference userRow = databaseUsers.child(id);
 
+        //Init
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .edit()
+                .putInt("postTotal", 999999999).apply(); //lol
+
+        //DB References
+        DatabaseReference databaseUsers = database.getReference("Users");
+        DatabaseReference databaseProblems = database.getReference("Problems");
+
+        String curr_userUid = curr_user.getUid();
+        DatabaseReference userRow = databaseUsers.child(curr_userUid);
+
+        //Get user
         userRow.runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
@@ -75,24 +92,55 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             }
         }); //runTransaction()
 
-        // POPULATE
-        ArrayList<String> problemTitles = new ArrayList<>();
-        problemTitles.add("Headphone not recognized in Windows 10!");
-        problemTitles.add("Keyboard ghosting!");
-        problemTitles.add("Redtooth not working!!");
-        problemTitles.add("How to win an argument against a flat-earther?");
 
-        //Setup RecyclerView
-        RecyclerView recyclerView = getView().findViewById(R.id.rvHomeCard);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new HomeCardAdapter(getActivity(), problemTitles);
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
+        //Get User's Post
+        Query query = databaseProblems.orderByChild("date");
+        getDB(query);
+
 
     } //onViewCreated()
 
+    public void showCards(List<Problem> problems) {
+        RecyclerView recyclerView = getView().findViewById(R.id.rvHomeCard);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new HomeCardAdapter(getActivity(), problems);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void sendTotal(int total) {
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .edit()
+                .putInt("postTotal", total).apply(); //buggy when firebase db is cleared.
+    }
+
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), adapter.getItem(position), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), adapter.getItem(position).getTitleProblem(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void getDB(Query query) {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Problem> problems = new ArrayList<>();
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Problem problem = dataSnapshot.getValue(Problem.class);
+                        problems.add(problem);
+                    }
+
+                    showCards(problems);
+                    sendTotal(problems.size());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        }); //Get User's Post
+
     }
 }

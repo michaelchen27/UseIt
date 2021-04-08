@@ -90,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     String userUid = mAuth.getUid();
                                     updateUI(user);
-                                    storeNewUsersData(userUid, firstname, lastname, email);
+                                    storeNewUserData(userUid, firstname, lastname, email);
                                     finish();
                                     MainActivity.ac_main.finish(); //finish MainActivity so when loggedIn user in HomePage presses back, it quits the app.
                                     Toast.makeText(SignUpActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
@@ -107,9 +107,9 @@ public class SignUpActivity extends AppCompatActivity {
         }); //setOnClickListener()
     } //onCreate()
 
-    private void storeNewUsersData(String userUid, String firstname, String lastname, String email) {
+    private void storeNewUserData(String userUid, String firstname, String lastname, String email) {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference dbUser = db.getReference().child("users");
+        DatabaseReference dbUser = db.getReference().child("Users");
 
         User user = new User(firstname, lastname, email);
 

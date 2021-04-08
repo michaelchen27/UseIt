@@ -42,7 +42,7 @@
 
             <TextView
                 android:id="@+id/poster"
-                android:text="Michael"
+                android:text="John Doe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/title_problem"
@@ -52,7 +52,7 @@
 
             <TextView
                 android:id="@+id/date"
-                android:text="31 Maret 2021"
+                android:text="31 Maret 20XX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/by"
@@ -76,7 +76,7 @@
 
                 <TextView
                     android:id="@+id/seen"
-                    android:text="201"
+                    android:text="0"
                     android:layout_marginHorizontal="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

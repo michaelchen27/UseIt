@@ -20,6 +20,7 @@ public class SucceedActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SucceedActivity.this, DashboardActivity.class);
+                finish();
                 startActivity(intent);
             }
         });
