@@ -1,11 +1,8 @@
 package umn.useit;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +28,9 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickListener{
@@ -41,9 +40,13 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     private TextView asked;
     FragmentManager fm = getFragmentManager();
 
-
     HomeCardAdapter adapter;
     ArrayList<String> problemTitles = new ArrayList<>();
+
+    //Firebase
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final DatabaseReference databaseUsers = database.getReference("Users");
+    private final DatabaseReference databaseProblems = database.getReference("Problems");
 
     @Nullable
     @Override
@@ -60,18 +63,14 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         level = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.level);
         asked = (TextView) Objects.requireNonNull(getView()).findViewById(R.id.asked);
 
-        //Firebase
+        // Init =============================================================================
         FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        //Init
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .edit()
                 .putInt("postTotal", 999999999).apply(); //lol
 
-        //DB References
-        DatabaseReference databaseUsers = database.getReference("Users");
-        DatabaseReference databaseProblems = database.getReference("Problems");
+
 
         String curr_userUid = curr_user.getUid();
         DatabaseReference userRow = databaseUsers.child(curr_userUid);
@@ -96,8 +95,6 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         //Get User's Post
         Query query = databaseProblems.orderByChild("date");
         getDB(query);
-
-
     } //onViewCreated()
 
     public void showCards(List<Problem> problems) {
@@ -108,18 +105,15 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         adapter = new HomeCardAdapter(getActivity(), problems);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-    }
+    } //showCards()
+
 
     public void sendTotal(int total) {
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .edit()
                 .putInt("postTotal", total).apply(); //buggy when firebase db is cleared.
-    }
+    } //sendTotal()
 
-    @Override
-    public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), adapter.getItem(position).getTitleProblem(), Toast.LENGTH_SHORT).show();
-    }
 
     public void getDB(Query query) {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -131,10 +125,8 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
                         Problem problem = dataSnapshot.getValue(Problem.class);
                         problems.add(problem);
                     }
-
                     showCards(problems);
                     sendTotal(problems.size());
-
                 }
             }
 
@@ -142,5 +134,22 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             public void onCancelled(@NonNull DatabaseError error) {}
         }); //Get User's Post
 
+    } //getDB()
+
+    @Override
+    public void onItemClick(View view, int position) {
+        String title = adapter.getItem(position).getTitleProblem();
+        String desc = adapter.getItem(position).getDescProblem();
+        int id = adapter.getItem(position).getId();
+        int seen = adapter.getItem(position).getSeen();
+        seen++;
+
+        databaseProblems.child(String.valueOf(id)).child("seen").setValue(seen);
+//        Toast.makeText(getActivity(), adapter.getItem(position).getTitleProblem() + " viewed", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("desc", desc);
+        startActivity(intent);
     }
+
 }

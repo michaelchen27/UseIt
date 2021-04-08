@@ -1,17 +1,22 @@
 package umn.useit;
 
+import java.util.Date;
+
 public class Problem {
 
-    private String TitleProblem, DescProblem, poster, date, seen;
+    private String TitleProblem, DescProblem, poster;
+    private String date;
+    private int id, seen;
 
     Problem(){}
 
-    public Problem(String titleProblem, String descProblem, String poster, String date, String seen) {
+    public Problem(String titleProblem, String descProblem, String poster, String date, int seen, int id) {
         TitleProblem = titleProblem;
         DescProblem = descProblem;
         this.poster = poster;
         this.date = date;
         this.seen = seen;
+        this.id = id;
     }
 
     public String getTitleProblem() {
@@ -34,9 +39,7 @@ public class Problem {
         return poster;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
-    }
+    public void setPoster(String poster) { this.poster = poster; }
 
     public String getDate() {
         return date;
@@ -46,11 +49,21 @@ public class Problem {
         this.date = date;
     }
 
-    public String getSeen() {
+    public int getSeen() {
         return seen;
     }
 
-    public void setSeen(String seen) {
+    public void setSeen(int seen) {
         this.seen = seen;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
+
+

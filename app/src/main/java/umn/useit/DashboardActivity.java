@@ -9,21 +9,39 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
+
+    //Fragments
     final Fragment fHome = new HomeFragment();
     final Fragment fAsk = new AskFragment();
     final Fragment fProfile = new ProfileFragment();
     final FragmentManager fm = getSupportFragmentManager();
     final FragmentTransaction ft = fm.beginTransaction();
     Fragment fCurr = fHome;
+
+    //Firebases
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private final DatabaseReference databaseUsers = database.getReference("Users");
+    private final DatabaseReference databaseProblems = database.getReference("Problems");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +50,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         //Bottom Nav
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fm.beginTransaction().add(R.id.fragment_container, fProfile, "PROFILE_FRAGMENT").hide(fProfile).commit();
         fm.beginTransaction().add(R.id.fragment_container, fAsk, "ASK_FRAGMENT").hide(fAsk).commit();
@@ -89,4 +106,26 @@ public class DashboardActivity extends AppCompatActivity {
     public void viewChat(View view) {
         startActivity(new Intent(this, ChatActivity.class));
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        databaseProblems.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Problem> problems = new ArrayList<>();
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Problem problem = dataSnapshot.getValue(Problem.class);
+                        problems.add(problem);
+                    }
+                    HomeFragment fHome = (HomeFragment) fm.findFragmentByTag("HOME_FRAGMENT");
+                    fHome.showCards(problems);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        }); //Get User's Post
+    } //onResume()
 }
