@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,11 +46,12 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     FragmentManager fm = getFragmentManager();
 
     HomeCardAdapter adapter;
-    ArrayList<String> problemTitles = new ArrayList<>();
     User user;
+
     private TextView welcome;
     private TextView level;
     private TextView asked;
+
 
     @Nullable
     @Override
@@ -64,14 +67,13 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         welcome = Objects.requireNonNull(getView()).findViewById(R.id.welcome);
         level = Objects.requireNonNull(getView()).findViewById(R.id.level);
         asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
+        ShimmerFrameLayout shimmerFrameLayout = getView().findViewById(R.id.shimmerLayout);
+        LinearLayout linearLayout = getView().findViewById(R.id.ll_shimmer);
+        View child = getLayoutInflater().inflate(R.layout.home_card_shimmer, null);
+
 
         // Init =============================================================================
         FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
-
-        PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .edit()
-                .putInt("postTotal", 999999999).apply(); //lol
-
 
         String curr_userUid = curr_user.getUid();
         DatabaseReference userRow = databaseUsers.child(curr_userUid);
@@ -99,6 +101,10 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         problems = getDB(query, problems);
         showCards(problems);
         sendTotal(problems.size());
+//        sendTotal(1);
+
+        linearLayout.addView(child);
+
 
     } //onViewCreated()
 

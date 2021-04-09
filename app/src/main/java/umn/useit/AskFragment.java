@@ -75,6 +75,6 @@ public class AskFragment extends Fragment {
 
     private int getPostAmount() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        return prefs.getInt("postTotal",0);
+        return prefs.getInt("postTotal",999999999);
     }
 }
