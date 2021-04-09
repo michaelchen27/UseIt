@@ -5,16 +5,16 @@ import java.util.Date;
 public class Problem {
 
     private String TitleProblem, DescProblem, poster;
-    private String date;
+    private long time;
     private int id, seen;
 
     Problem(){}
 
-    public Problem(String titleProblem, String descProblem, String poster, String date, int seen, int id) {
+    public Problem(String titleProblem, String descProblem, String poster, long time, int seen, int id) {
         TitleProblem = titleProblem;
         DescProblem = descProblem;
         this.poster = poster;
-        this.date = date;
+        this.time = time;
         this.seen = seen;
         this.id = id;
     }
@@ -41,12 +41,12 @@ public class Problem {
 
     public void setPoster(String poster) { this.poster = poster; }
 
-    public String getDate() {
-        return date;
+    public long getTime() {
+        return time;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public int getSeen() {

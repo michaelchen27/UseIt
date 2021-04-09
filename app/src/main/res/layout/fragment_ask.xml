@@ -1,53 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/TitleProblem"
         android:layout_width="350dp"
         android:layout_height="55dp"
-        android:hint="@string/title_problem"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"
-        />
+        android:hint="@string/title_problem"
+        android:inputType="textCapSentences"
+        android:maxLength="35"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/ProblemDesc"
         android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/desc_problem"
-        app:layout_constraintTop_toBottomOf="@id/TitleProblem"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="300dp"
         android:layout_marginTop="20dp"
         android:layout_weight="1"
+        android:background="@drawable/problem_desc_text_box"
+        android:gravity="top|left"
+        android:hint="@string/desc_problem"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLength="2000"
         android:maxLines="20"
-        />
-
-    <Button
-        android:id="@+id/AddPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_photo"
-        app:layout_constraintTop_toBottomOf="@id/ProblemDesc"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/TitleProblem" />
+
+    <ImageView
+        android:id="@+id/AddPhoto"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_image"
+        app:layout_constraintLeft_toLeftOf="@id/ProblemDesc"
+        app:layout_constraintTop_toBottomOf="@id/ProblemDesc" />
 
     <Button
         android:id="@+id/SubmitProblem"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/submit_problem"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toLeftOf="@id/ProblemDesc"
+        app:layout_constraintRight_toRightOf="@id/ProblemDesc"
+        app:layout_constraintTop_toBottomOf="@id/ProblemDesc" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/submit_problem"
-        app:layout_constraintTop_toBottomOf="@+id/AddPhoto"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50dp"/>
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
