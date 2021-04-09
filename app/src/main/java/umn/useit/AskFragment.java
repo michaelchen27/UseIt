@@ -62,7 +62,7 @@ public class AskFragment extends Fragment {
                 storeProblemData(total ,title_problem, problem_desc, user_email, date);
 
                 startActivity(new Intent(getActivity(), SucceedActivity.class));
-                getActivity().finish();
+                Objects.requireNonNull(getActivity()).finish();
             }
         });
     } //onViewCreated()

@@ -67,10 +67,12 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         welcome = Objects.requireNonNull(getView()).findViewById(R.id.welcome);
         level = Objects.requireNonNull(getView()).findViewById(R.id.level);
         asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
+
+        // Add shimmer
         ShimmerFrameLayout shimmerFrameLayout = getView().findViewById(R.id.shimmerLayout);
         LinearLayout linearLayout = getView().findViewById(R.id.ll_shimmer);
         View child = getLayoutInflater().inflate(R.layout.home_card_shimmer, null);
-
+        linearLayout.addView(child);
 
         // Init =============================================================================
         FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
@@ -78,7 +80,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         String curr_userUid = curr_user.getUid();
         DatabaseReference userRow = databaseUsers.child(curr_userUid);
 
-        //Get user
+        //Get user =======================================================================================
         userRow.runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
@@ -95,15 +97,12 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             }
         }); //runTransaction()
 
-        //Get All User's Post
+        //Get All User's Post ============================================================================
         Query query = databaseProblems.orderByChild("date");
         List<Problem> problems = new ArrayList<>();
         problems = getDB(query, problems);
         showCards(problems);
         sendTotal(problems.size());
-//        sendTotal(1);
-
-        linearLayout.addView(child);
 
 
     } //onViewCreated()

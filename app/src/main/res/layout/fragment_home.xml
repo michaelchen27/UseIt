@@ -28,6 +28,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                    <include layout="@layout/home_card_shimmer" />
+                    <include layout="@layout/home_card_shimmer" />
+
                 </LinearLayout>
 
             </com.facebook.shimmer.ShimmerFrameLayout>
