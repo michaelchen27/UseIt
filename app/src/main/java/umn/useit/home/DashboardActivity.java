@@ -12,8 +12,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,7 +59,6 @@ public class DashboardActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.fragment_container, fProfile, "PROFILE_FRAGMENT").hide(fProfile).commit();
         fm.beginTransaction().add(R.id.fragment_container, fAsk, "ASK_FRAGMENT").hide(fAsk).commit();
         fm.beginTransaction().add(R.id.fragment_container,fHome, "HOME_FRAGMENT").commit();
-
     } //onCreate()
 
     @Override
@@ -124,6 +125,7 @@ public class DashboardActivity extends AppCompatActivity {
                     }
                     HomeFragment fHome = (HomeFragment) fm.findFragmentByTag("HOME_FRAGMENT");
                     fHome.showCards(problems);
+                    fHome.sendTotal(problems.size());
                 }
             }
 

@@ -62,7 +62,7 @@ public class AskFragment extends Fragment {
                 storeProblemData(total ,title_problem, problem_desc, user_email, date);
 
                 startActivity(new Intent(getActivity(), SucceedActivity.class));
-                getActivity().finish();
+                Objects.requireNonNull(getActivity()).finish();
             }
         });
     } //onViewCreated()
@@ -75,6 +75,6 @@ public class AskFragment extends Fragment {
 
     private int getPostAmount() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        return prefs.getInt("postTotal",0);
+        return prefs.getInt("postTotal",999999999);
     }
 }
