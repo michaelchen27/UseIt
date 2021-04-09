@@ -48,11 +48,13 @@
         <activity
             android:name=".ChatActivity"
             android:theme="@style/Theme.UseIt.NoActionBar" />
-        <activity android:name=".NotificationActivity" />
+
+        <activity android:name=".NotificationActivity"
+            android:label="Notifications"/>
 
         <activity
             android:name=".SucceedActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.UseIt.NoActionBar" />
 
     </application>
 </manifest>

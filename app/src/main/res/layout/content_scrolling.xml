@@ -8,7 +8,8 @@
     tools:context=".DetailActivity"
     tools:showIn="@layout/activity_detail">
 
-    <TextView android:id="@+id/problem_desc"
+    <TextView
+        android:id="@+id/problem_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"

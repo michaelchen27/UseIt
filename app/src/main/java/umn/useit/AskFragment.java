@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,19 +20,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Objects;
 
 import umn.useit.model.Problem;
 
 public class AskFragment extends Fragment {
 
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
     private final FirebaseDatabase db = FirebaseDatabase.getInstance();
     private final DatabaseReference databaseProblems = db.getReference().child("Problems");
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Nullable
     @Override
@@ -45,6 +43,22 @@ public class AskFragment extends Fragment {
         EditText etTitleProblem = Objects.requireNonNull(getView()).findViewById(R.id.TitleProblem);
         EditText etProblemDesc = Objects.requireNonNull(getView()).findViewById(R.id.ProblemDesc);
         Button btnSubmit = Objects.requireNonNull(getView()).findViewById(R.id.SubmitProblem);
+        btnSubmit.setEnabled(false);
+
+        etTitleProblem.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                btnSubmit.setEnabled(s.toString().trim().length() != 0);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,14 +66,13 @@ public class AskFragment extends Fragment {
                 String title_problem = etTitleProblem.getText().toString();
                 String problem_desc = etProblemDesc.getText().toString();
                 String user_email = mAuth.getCurrentUser().getEmail();
-                DateFormat df = new SimpleDateFormat("d MMM yy · HH:mm ");
-                String date = df.format(Calendar.getInstance().getTime());
+                long date = System.currentTimeMillis();
 
                 int index = user_email.indexOf('@');
-                user_email = user_email.substring(0,index);
+                user_email = user_email.substring(0, index);
 
                 int total = getPostAmount(); //buggy method
-                storeProblemData(total ,title_problem, problem_desc, user_email, date);
+                storeProblemData(total, title_problem, problem_desc, user_email, date);
 
                 startActivity(new Intent(getActivity(), SucceedActivity.class));
                 Objects.requireNonNull(getActivity()).finish();
@@ -67,14 +80,13 @@ public class AskFragment extends Fragment {
         });
     } //onViewCreated()
 
-    //TODO: Keep timestamp as Firebase TIMESTAMP, not string!
-    private void storeProblemData(int id, String title, String desc, String poster, String date) {
+    private void storeProblemData(int id, String title, String desc, String poster, long date) {
         Problem problem = new Problem(title, desc, poster, date, 0, id);
         databaseProblems.child(String.valueOf(id)).setValue(problem);
     }
 
     private int getPostAmount() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        return prefs.getInt("postTotal",999999999);
+        return prefs.getInt("postTotal", 0);
     }
 }

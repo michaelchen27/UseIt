@@ -1,6 +1,7 @@
 package umn.useit.home;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,8 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
         Problem problem = mData.get(position);
         holder.tvTitleProblem.setText(problem.getTitleProblem());
         holder.tvPoster.setText(problem.getPoster());
-        holder.tvDate.setText(problem.getDate());
+
+        holder.tvDate.setText(DateFormat.format("dd MMM yy · hh:mm a", problem.getTime()));
         holder.tvSeen.setText(String.valueOf(problem.getSeen()));
     }
 
