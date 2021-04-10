@@ -1,13 +1,17 @@
 package umn.useit;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -15,7 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+
+import umn.useit.model.ChatMessage;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -23,9 +28,7 @@ public class ChatActivity extends AppCompatActivity {
     private final DatabaseReference databaseChat = db.getReference().child("Chats");
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    String email = currentUser.getEmail();
-    int index = email.indexOf('@');
-
+    String curr_email = currentUser.getEmail();
     private FirebaseListAdapter<ChatMessage> adapter;
 
     @Override
@@ -33,15 +36,37 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        ExtendedFloatingActionButton fab = (ExtendedFloatingActionButton) findViewById(R.id.fab);
+        //GUI
+        EditText input = findViewById(R.id.input);
+        ExtendedFloatingActionButton fab = findViewById(R.id.fab);
+        fab.setEnabled(false);
 
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                fab.setEnabled(s.toString().trim().length() != 0);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        //Display message sender using stripped email.
+        int index = curr_email.indexOf('@');
+        String username = curr_email.substring(0, index);
+
+        //Send message button, if EditText is empty, the send button is disabled.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText input = (EditText) findViewById(R.id.input);
                 databaseChat
                         .push()
-                        .setValue(new ChatMessage(input.getText().toString(), currentUser.getEmail()));
+                        .setValue(new ChatMessage(input.getText().toString(), username));
                 input.setText("");
             }
         });
@@ -50,25 +75,40 @@ public class ChatActivity extends AppCompatActivity {
     } //onCreate()
 
     private void displayChatMessages() {
-        ListView listOfMessages = (ListView) findViewById(R.id.list_of_messages);
-//        Query query = databaseChat.orderByChild("messageTime");
+        ListView listOfMessages = findViewById(R.id.list_of_messages);
 
         adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class, R.layout.message, databaseChat) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
-                TextView messageText = (TextView) v.findViewById(R.id.message_text);
-                TextView messageUser = (TextView) v.findViewById(R.id.message_user);
-                TextView messageTime = (TextView) v.findViewById(R.id.message_time);
+                TextView messageText = v.findViewById(R.id.message_text);
+                TextView messageUser = v.findViewById(R.id.message_user);
+                TextView messageTime = v.findViewById(R.id.message_time);
 
-                messageText.setText(model.getMessageText());
+                int index = curr_email.indexOf('@');
+                String username = curr_email.substring(0, index);
+
+                //TODO: Color changed when content in scroll view is not visible.
+                if (model.getMessageUser().equals(username))
+                    messageText.setBackgroundColor(v.getResources().getColor(R.color.light_teal));
+
                 messageUser.setText(model.getMessageUser());
+                messageText.setText(model.getMessageText());
+                messageTime.setText(DateFormat.format("hh:mm a", model.getMessageTime()));
 
-                messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
-                        model.getMessageTime()));
             }
         };
         listOfMessages.setAdapter(adapter);
+    } //displayChatMessages()
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayChatMessages();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        displayChatMessages();
+    }
 }

@@ -9,25 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/message_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Michael"
-            android:textColor="@color/black"
-            android:textStyle="normal|bold"
-            app:layout_constraintLeft_toLeftOf="@id/card_view_msg"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_view_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/soft_grey"
             app:cardUseCompatPadding="true"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/message_user">
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/message_text"
@@ -48,7 +37,7 @@
             android:layout_marginBottom="5dp"
             android:text="10:05 pm"
             app:layout_constraintBottom_toBottomOf="@id/card_view_msg"
-            app:layout_constraintLeft_toRightOf="@id/card_view_msg" />
+            app:layout_constraintRight_toLeftOf="@id/card_view_msg" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

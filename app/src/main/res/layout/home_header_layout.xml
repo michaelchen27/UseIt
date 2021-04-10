@@ -53,7 +53,7 @@
         android:layout_alignTop="@id/button_panel"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="50dp"
-        android:text="Hi,"
+        android:text="Welcome!"
         android:textColor="@color/grey"
         android:textSize="40sp" />
 

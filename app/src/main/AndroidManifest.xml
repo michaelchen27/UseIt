@@ -11,20 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UseIt">
+
         <activity android:name=".Profile"></activity>
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
             android:theme="@style/Theme.UseIt.NoActionBar" />
+
         <activity
-            android:name=".ChatActivity"
-            android:theme="@style/Theme.UseIt.NoActionBar" />
-        <activity android:name=".NotificationActivity" />
-        <activity
-            android:name=".DashboardActivity"
-            android:theme="@style/Theme.UseIt.NoActionBar" />
-        <activity
-            android:name=".SplashActivity"
+            android:name=".prehome.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,21 +27,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".MainActivity"
+            android:name=".prehome.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <activity
-            android:name=".SignInActivity"
-            android:label="Sign In"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".SignUpActivity"
+            android:name=".prehome.SignUpActivity"
             android:label="Sign Up"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".prehome.SignInActivity"
+            android:label="Sign In"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".home.DashboardActivity"
+            android:theme="@style/Theme.UseIt.NoActionBar" />
+
+
+        <activity
+            android:name=".ChatActivity"
+            android:theme="@style/Theme.UseIt.NoActionBar" />
+
+        <activity android:name=".NotificationActivity"
+            android:label="Notifications"/>
+
         <activity
             android:name=".SucceedActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-    </application>
+            android:theme="@style/Theme.UseIt.NoActionBar" />
 
+    </application>
 </manifest>

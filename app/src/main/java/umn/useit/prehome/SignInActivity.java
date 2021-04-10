@@ -1,7 +1,4 @@
-package umn.useit;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package umn.useit.prehome;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
+
+import umn.useit.home.DashboardActivity;
+import umn.useit.R;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -35,17 +36,17 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        TextView signUpDirect = (TextView) findViewById(R.id.sign_up_direct);
-        Button login_button = (Button) findViewById(R.id.login_button);
-        TextInputEditText mEmail = (TextInputEditText) findViewById(R.id.email); //don't forget to change username -> email in XML too
-        TextInputEditText mPassword = (TextInputEditText) findViewById(R.id.password);
-        TextView errormsg = (TextView) findViewById(R.id.errormsg);
+        TextView signUpDirect = findViewById(R.id.sign_up_direct);
+        Button login_button = findViewById(R.id.login_button);
+        TextInputEditText mEmail = findViewById(R.id.email); //don't forget to change username -> email in XML too
+        TextInputEditText mPassword = findViewById(R.id.password);
+        TextView errormsg = findViewById(R.id.errormsg);
 
         // Enable back button on ActionBar
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         // Spinner for loading Indicator
-        spinner = (ProgressBar)findViewById(R.id.progressBar);
+        spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
 
         // FirebaseAuth instance init
@@ -58,7 +59,7 @@ public class SignInActivity extends AppCompatActivity {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString();
 
-                if(TextUtils.isEmpty(email)) {
+                if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Email is required!");
                     return;
                 }
@@ -66,7 +67,7 @@ public class SignInActivity extends AppCompatActivity {
                     mEmail.setError("Invalid email address!");
                     return;
                 }
-                if(TextUtils.isEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {
                     mPassword.setError("Password is required!");
                     return;
                 }
@@ -110,6 +111,7 @@ public class SignInActivity extends AppCompatActivity {
         startActivity(new Intent(this, SignUpActivity.class));
     }
 
-    private void updateUI(FirebaseUser currentUser) { }
+    private void updateUI(FirebaseUser currentUser) {
+    }
 
 }
