@@ -4,54 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".prehome.MainActivity"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".prehome.MainActivity">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/slideViewPager"
         android:layout_width="match_parent"
         android:layout_height="550dp"
+        app:layout_constraintBottom_toTopOf="@id/dotsLayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/dotsLayout"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/dotsLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/slideViewPager"
         app:layout_constraintBottom_toTopOf="@id/btn_sign_up"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/slideViewPager" />
 
     <Button
         android:id="@+id/btn_sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btn_sign_in"
-        app:layout_constraintTop_toBottomOf="@id/dotsLayout"
         android:layout_marginHorizontal="20dp"
         android:background="@drawable/btn_sign_up"
+        android:gravity="center"
         android:text="Sign Up"
         android:textColor="@color/white"
-        android:gravity="center" />
+        app:layout_constraintBottom_toTopOf="@id/btn_sign_in"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dotsLayout" />
 
     <Button
         android:id="@+id/btn_sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_sign_up"
         android:layout_marginHorizontal="20dp"
         android:background="@drawable/btn_sign_in"
+        android:gravity="center"
         android:text="Sign In"
         android:textColor="@color/black"
-        android:gravity="center" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_sign_up" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

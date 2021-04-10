@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,6 +53,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     private TextView welcome;
     private TextView level;
     private TextView asked;
+    private NestedScrollView nestedScrollView;
 
 
     @Nullable
@@ -67,6 +70,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         welcome = Objects.requireNonNull(getView()).findViewById(R.id.welcome);
         level = Objects.requireNonNull(getView()).findViewById(R.id.level);
         asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
+        nestedScrollView = getView().findViewById(R.id.n_scrollview);
 
         // Add shimmer
         ShimmerFrameLayout shimmerFrameLayout = getView().findViewById(R.id.shimmerLayout);
@@ -162,6 +166,10 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         intent.putExtra("title", title);
         intent.putExtra("desc", desc);
         startActivity(intent);
+    }
+
+    public void scrollToTop() {
+        nestedScrollView.fullScroll(NestedScrollView.FOCUS_UP);
     }
 
 }
