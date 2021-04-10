@@ -105,10 +105,12 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         Query query = databaseProblems.orderByChild("date");
         List<Problem> problems = new ArrayList<>();
         problems = getDB(query, problems);
+
         showCards(problems);
         sendTotal(problems.size());
 
-
+        //TODO: Push post using Firebase generated ID, then find a way to increment the view.
+        //TODO: Implement FirebaseRecyclerAdapter!
     } //onViewCreated()
 
     /*  Show cards on Homescreen using RecyclerView. Firebase doesn't provide descending order query,
@@ -132,7 +134,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
 
     //Get data from DB with ListenerForSingleValueEvent
     public List<Problem> getDB(Query query, List<Problem> list) {
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -160,8 +162,8 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         int seen = adapter.getItem(position).getSeen();
         seen++;
 
-        databaseProblems.child(String.valueOf(id)).child("seen").setValue(seen);
-//        Toast.makeText(getActivity(), adapter.getItem(position).getTitleProblem() + " viewed", Toast.LENGTH_SHORT).show();
+//        databaseProblems.child(String.valueOf(id)).child("seen").setValue(seen);
+
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("desc", desc);

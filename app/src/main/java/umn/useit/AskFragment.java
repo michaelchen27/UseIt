@@ -82,7 +82,8 @@ public class AskFragment extends Fragment {
 
     private void storeProblemData(int id, String title, String desc, String poster, long date) {
         Problem problem = new Problem(title, desc, poster, date, 0, id);
-        databaseProblems.child(String.valueOf(id)).setValue(problem);
+//        databaseProblems.child(String.valueOf(id)).setValue(problem);
+        databaseProblems.push().setValue(problem);
     }
 
     private int getPostAmount() {
