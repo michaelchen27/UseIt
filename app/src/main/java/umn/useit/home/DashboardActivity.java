@@ -29,6 +29,7 @@ import umn.useit.ChatActivity;
 import umn.useit.NotificationActivity;
 import umn.useit.ProfileFragment;
 import umn.useit.R;
+import umn.useit.RoomActivity;
 import umn.useit.model.Problem;
 
 public class DashboardActivity extends AppCompatActivity {

@@ -15,7 +15,6 @@ import umn.useit.home.DashboardActivity;
 
 public class SucceedActivity extends AppCompatActivity {
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prob_sub_succeed);
@@ -23,20 +22,17 @@ public class SucceedActivity extends AppCompatActivity {
         MaterialButton mbtn_go_home = findViewById(R.id.btn_go_home);
         TextView countdown = findViewById(R.id.countdown);
 
-        mbtn_go_home.setOnClickListener(v -> {
-            goBack();
-        });
-
-        new Handler().postDelayed(this::goBack, 3000);
-
         new CountDownTimer(4000, 1000) {
-
             public void onTick(long millisUntilFinished) {
                 countdown.setText("Redirecting you back to home in " + millisUntilFinished / 1000 + " seconds");
+                mbtn_go_home.setOnClickListener(v -> {
+                    cancel();
+                    goBack();
+                });
             }
 
             public void onFinish() {
-                countdown.setText("0");
+                goBack();
             }
         }.start();
 
