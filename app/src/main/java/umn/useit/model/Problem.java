@@ -1,22 +1,20 @@
 package umn.useit.model;
 
-import java.util.Date;
-
 public class Problem {
 
     private String TitleProblem, DescProblem, poster;
     private long time;
-    private int id, seen;
+    private int seen;
 
-    Problem(){}
+    Problem() {
+    }
 
-    public Problem(String titleProblem, String descProblem, String poster, long time, int seen, int id) {
+    public Problem(String titleProblem, String descProblem, String poster, long time, int seen) {
         TitleProblem = titleProblem;
         DescProblem = descProblem;
         this.poster = poster;
         this.time = time;
         this.seen = seen;
-        this.id = id;
     }
 
     public String getTitleProblem() {
@@ -39,7 +37,9 @@ public class Problem {
         return poster;
     }
 
-    public void setPoster(String poster) { this.poster = poster; }
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
 
     public long getTime() {
         return time;
@@ -57,13 +57,6 @@ public class Problem {
         this.seen = seen;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }
 
 
