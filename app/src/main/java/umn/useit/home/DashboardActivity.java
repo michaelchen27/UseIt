@@ -114,8 +114,8 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         databaseProblems.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -128,7 +128,6 @@ public class DashboardActivity extends AppCompatActivity {
                     HomeFragment fHome = (HomeFragment) fm.findFragmentByTag("HOME_FRAGMENT");
                     if (fHome != null) {
                         fHome.showCards(problems);
-                        fHome.sendTotal(problems.size());
                     }
                 }
             }

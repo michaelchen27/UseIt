@@ -54,6 +54,21 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
         return mData.size();
     }
 
+    Problem getItem(int id) {
+        return mData.get(id);
+    }
+
+    //Allow click events to be caught.
+    void setClickListener(ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+
+    //ItemClicKListener
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
     //Store and recycler the views as they are scrolled off screen.
     public class HomeCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -72,22 +87,18 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
 
         @Override
         public void onClick(View view) {
-            if(mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
     }
 
-    Problem getItem(int id) {
-        return mData.get(id);
+
+    public void clear() {
+        mData.clear();
     }
 
-    //Allow click events to be caught.
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
-    //ItemClicKListener
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
+    public void addAll(List<Problem> list) {
+        list.addAll(list);
+        notifyDataSetChanged();
     }
 }
 

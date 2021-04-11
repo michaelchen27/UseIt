@@ -2,12 +2,14 @@ package umn.useit.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,22 +48,19 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     private final DatabaseReference databaseUsers = database.getReference("Users");
     private final DatabaseReference databaseProblems = database.getReference("Problems");
     private final FragmentManager fm = getFragmentManager();
-
     //Adapter
     HomeCardAdapter adapter;
-
     //Models
     User user;
     Problem problem;
+    String key;
 
+    private SwipeRefreshLayout swipeRefresh;
     //GUI
     private TextView welcome;
     private TextView level;
     private TextView asked;
     private NestedScrollView nestedScrollView;
-
-    String key;
-    boolean flag = true;
 
     @Nullable
     @Override
@@ -77,6 +77,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         level = Objects.requireNonNull(getView()).findViewById(R.id.level);
         asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
         nestedScrollView = getView().findViewById(R.id.n_scrollview);
+        swipeRefresh = getView().findViewById(R.id.swipeRefreshLayout);
 
         // Add shimmer
         ShimmerFrameLayout shimmerFrameLayout = getView().findViewById(R.id.shimmerLayout);
@@ -107,15 +108,27 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             }
         }); //runTransaction()
 
-        //Get All User's Post ============================================================================
-        Query query = databaseProblems.orderByChild("date");
-        List<Problem> problems = new ArrayList<>();
-        problems = getDB(query, problems);
+        swipeRefresh.setColorSchemeResources(R.color.teal);
+        swipeRefresh.setOnRefreshListener(() -> {
+            databaseProblems.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Problem> problems = new ArrayList<>();
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Problem problem = dataSnapshot.getValue(Problem.class);
+                            problems.add(problem);
+                        }
+                            showCards(problems);
+                    }
+                }
 
-        showCards(problems);
-
-        //TODO: Push post using Firebase generated ID, then find a way to increment the view.
-        //TODO: Implement FirebaseRecyclerAdapter!
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+            new Handler().postDelayed(() -> swipeRefresh.setRefreshing(false), 2000);
+        });
     } //onViewCreated()
 
     /*  Show cards on Homescreen using RecyclerView. Firebase doesn't provide descending order query,
@@ -138,27 +151,6 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
                 .putInt("postTotal", total).apply(); //TODO: fix the cleared DB bug!
     } //sendTotal()
 
-    //Get data from DB with ListenerForSingleValueEvent
-    public List<Problem> getDB(Query query, List<Problem> list) {
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Problem problem = dataSnapshot.getValue(Problem.class);
-                        list.add(problem);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-        return list;
-    } //getDB()
-
-
     //Increment view if a post is viewed. Send title and desc to detail via intent.
     @Override
     public void onItemClick(View view, int position) {
@@ -173,17 +165,15 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     }
 
     public void incrementSeen(int position) {
-        String title = adapter.getItem(position).getTitleProblem();
-        String poster = adapter.getItem(position).getPoster();
-        ArrayList<String> keylist = new ArrayList<String>();
-        int seen = adapter.getItem(position).getSeen()+1;
+        long time = adapter.getItem(position).getTime();
+        int seen = adapter.getItem(position).getSeen() + 1;
 
         databaseProblems.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren() ) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Problem problem = snapshot.getValue(Problem.class);
-                    if(problem.getTitleProblem().equals(title) && problem.getPoster().equals(poster)) {
+                    if (problem.getTime() == time) {
                         key = snapshot.getKey();
                         problem.setSeen(seen);
                         databaseProblems.child(key).setValue(problem);
@@ -193,7 +183,8 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
     }
