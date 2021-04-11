@@ -1,4 +1,4 @@
-package umn.useit.home;
+package umn.useit;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,10 +15,11 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.List;
 
 import umn.useit.R;
+import umn.useit.model.ChatMessage;
 import umn.useit.model.Room;
 
-public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder> {
-    private final List<Room> mData;
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
+    private final List<ChatMessage> mData;
     private final LayoutInflater mInflater;
 
     private ItemClickListener mClickListener;
@@ -27,27 +28,23 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     String curr_email = curr_user.getEmail();
 
     //Constructor
-    public RoomAdapter(Context context, List<Room> data) {
+    public ChatAdapter(Context context, List<ChatMessage> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
 
     @NonNull
     @Override
-    public RoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.room, parent, false);
-        return new RoomViewHolder(view);
+    public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.message, parent, false);
+        return new ChatViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RoomViewHolder holder, int position) {
-        Room room = mData.get(position);
-        holder.problem_title.setText(room.getProblemTitle());
-        if(room.getPoster().equals(curr_email)) {
-            holder.poster.setText("me");
-        } else {
-            holder.poster.setText(room.getPoster().substring(0, room.getPoster().indexOf("@")));
-        }
+    public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
+        ChatMessage chatMessage = mData.get(position);
+        holder.message_user.setText(chatMessage.getMessageUser());
+        holder.message_text.setText(chatMessage.getMessageText());
     }
 
     @Override
@@ -56,7 +53,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     }
 
     // Convenient method for getting data at click position
-    public Room getItem(int id) {
+    public ChatMessage getItem(int id) {
         return mData.get(id);
     }
 
@@ -70,15 +67,15 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     }
 
     //Store and recycler the views as they are scrolled off screen.
-    public class RoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView problem_title, poster;
+        TextView message_user, message_text;
 
-        public RoomViewHolder(@NonNull View itemView) {
+        public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
-            problem_title = itemView.findViewById(R.id.problem_title);
-            poster = itemView.findViewById(R.id.poster);
-            itemView.setOnClickListener(this);
+            message_user = itemView.findViewById(R.id.message_user);
+            message_text = itemView.findViewById(R.id.message_text);
+//            itemView.setOnClickListener(this);
         }
 
         @Override
