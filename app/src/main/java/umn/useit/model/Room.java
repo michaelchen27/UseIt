@@ -1,32 +1,32 @@
 package umn.useit.model;
 
-import java.util.List;
-
-import umn.useit.model.ChatMessage;
-
 public class Room {
 
-    private String senderName;
-    private String previewMessage;
+    boolean status;
+    private final String user1;
+    private final String user2;
+    private final String problemTitle;
 
-    public Room(String senderName, String previewMessage) {
-        this.senderName = senderName;
-        this.previewMessage = previewMessage;
+    public Room(String user1, String user2, String problemTitle, boolean status) {
+        this.user1 = user1;
+        this.user2 = user2;
+        this.problemTitle = problemTitle;
+        this.status = status;
     }
 
-    public String getSenderName() {
-        return senderName;
+    public String getUser1() {
+        return user1;
     }
 
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
+    public String getUser2() {
+        return user2;
     }
 
-    public String getPreviewMessage() {
-        return previewMessage;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setChatMessages(String previewMessage) {
-        this.previewMessage = previewMessage;
+    public String getProblemTitle() {
+        return problemTitle;
     }
 }

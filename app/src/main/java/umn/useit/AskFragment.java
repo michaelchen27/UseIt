@@ -68,10 +68,7 @@ public class AskFragment extends Fragment {
                 String user_email = mAuth.getCurrentUser().getEmail();
                 long date = System.currentTimeMillis();
 
-                int index = user_email.indexOf('@');
-                user_email = user_email.substring(0, index);
-
-                Problem problem = new Problem(title_problem, problem_desc, user_email, date, 0);
+                Problem problem = new Problem(title_problem, problem_desc, user_email, date, 0, true);
                 databaseProblems.push().setValue(problem);
 
                 startActivity(new Intent(getActivity(), SucceedActivity.class));
@@ -79,8 +76,4 @@ public class AskFragment extends Fragment {
             }
         });
     } //onViewCreated()
-
-    private void storeProblemData(String title, String desc, String poster, long date) {
-
-    }
 }

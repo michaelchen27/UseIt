@@ -35,14 +35,7 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
-        List<Room> rooms = new ArrayList<>();
-//        rooms = getDB(databaseRooms, rooms);
-        Room room = new Room("Michael", "Hello, dis is harcoded!");
-        rooms.add(room);
-        room = new Room("William", "Hello, dis is william hard-coded!");
-        rooms.add(room);
-
-        showRooms(rooms);
+//        showRooms(rooms);
     } //onCreate()
 
     public void showRooms(List<Room> rooms) {

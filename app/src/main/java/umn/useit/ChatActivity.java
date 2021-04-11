@@ -56,9 +56,9 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        //Display message sender using stripped email.
-        int index = curr_email.indexOf('@');
-        String username = curr_email.substring(0, index);
+//        //Display message sender using stripped email.
+//        int index = curr_email.indexOf('@');
+//        String username = curr_email.substring(0, index);
 
         //Send message button, if EditText is empty, the send button is disabled.
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +66,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 databaseChat
                         .push()
-                        .setValue(new ChatMessage(input.getText().toString(), username));
+                        .setValue(new ChatMessage(input.getText().toString(), curr_email));
                 input.setText("");
             }
         });
