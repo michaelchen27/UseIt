@@ -50,6 +50,10 @@
             android:name=".ChatActivity"
             android:theme="@style/Theme.UseIt.NoActionBar" />
 
+        <activity
+            android:name=".RoomActivity"
+            android:theme="@style/Theme.UseIt.NoActionBar" />
+
         <activity android:name=".NotificationActivity"
             android:label="Notifications"/>
 

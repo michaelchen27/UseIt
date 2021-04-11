@@ -5,16 +5,18 @@ public class Problem {
     private String TitleProblem, DescProblem, poster;
     private long time;
     private int seen;
+    private boolean available;
 
     Problem() {
     }
 
-    public Problem(String titleProblem, String descProblem, String poster, long time, int seen) {
+    public Problem(String titleProblem, String descProblem, String poster, long time, int seen, boolean available) {
         TitleProblem = titleProblem;
         DescProblem = descProblem;
         this.poster = poster;
         this.time = time;
         this.seen = seen;
+        this.available = available;
     }
 
     public String getTitleProblem() {
@@ -57,6 +59,13 @@ public class Problem {
         this.seen = seen;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 }
 
 

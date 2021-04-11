@@ -42,8 +42,7 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
     public void onBindViewHolder(@NonNull HomeCardViewHolder holder, int position) {
         Problem problem = mData.get(position);
         holder.tvTitleProblem.setText(problem.getTitleProblem());
-        holder.tvPoster.setText(problem.getPoster());
-
+        holder.tvPoster.setText(problem.getPoster().substring(0, problem.getPoster().indexOf('@')));
         holder.tvDate.setText(DateFormat.format("dd MMM yy · hh:mm a", problem.getTime()));
         holder.tvSeen.setText(String.valueOf(problem.getSeen()));
     }
@@ -89,16 +88,6 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
-    }
-
-
-    public void clear() {
-        mData.clear();
-    }
-
-    public void addAll(List<Problem> list) {
-        list.addAll(list);
-        notifyDataSetChanged();
     }
 }
 

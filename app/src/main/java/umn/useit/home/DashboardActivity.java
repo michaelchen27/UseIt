@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import umn.useit.AskFragment;
 import umn.useit.ChatActivity;
@@ -40,15 +42,16 @@ public class DashboardActivity extends AppCompatActivity {
     final Fragment fProfile = new ProfileFragment();
     final FragmentManager fm = getSupportFragmentManager();
     final FragmentTransaction ft = fm.beginTransaction();
-
     //Firebases
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference databaseUsers = database.getReference("Users");
     private final DatabaseReference databaseProblems = database.getReference("Problems");
     Fragment fCurr = fHome;
+
     private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+        /*Hide and show fragments based on BottomNav selection*/
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             FragmentTransaction ft = fm.beginTransaction();
@@ -84,12 +87,13 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        //Bottom Nav
+        /*Show home fragment on start*/
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fm.beginTransaction().add(R.id.fragment_container, fProfile, "PROFILE_FRAGMENT").hide(fProfile).commit();
         fm.beginTransaction().add(R.id.fragment_container, fAsk, "ASK_FRAGMENT").hide(fAsk).commit();
         fm.beginTransaction().add(R.id.fragment_container, fHome, "HOME_FRAGMENT").commit();
+
     } //onCreate()
 
     @Override
@@ -99,23 +103,18 @@ public class DashboardActivity extends AppCompatActivity {
         return true;
     }
 
-    public void changeFragment(FragmentTransaction transaction, Fragment f, String tag) {
-        transaction
-                .replace(R.id.fragment_container, f, tag)
-                .commit();
-    }
-
     public void viewNotification(View view) {
         startActivity(new Intent(this, NotificationActivity.class));
     }
 
     public void viewChat(View view) {
-        startActivity(new Intent(this, ChatActivity.class));
+        startActivity(new Intent(this, RoomActivity.class));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         databaseProblems.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -123,18 +122,20 @@ public class DashboardActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Problem problem = dataSnapshot.getValue(Problem.class);
-                        problems.add(problem);
+                        if(problem.isAvailable()) problems.add(problem);
+
                     }
+
                     HomeFragment fHome = (HomeFragment) fm.findFragmentByTag("HOME_FRAGMENT");
                     if (fHome != null) {
                         fHome.showCards(problems);
+
                     }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        }); //Get User's Post
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     } //onResume()
 }
