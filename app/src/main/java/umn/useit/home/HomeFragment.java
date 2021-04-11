@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,16 +44,23 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference databaseUsers = database.getReference("Users");
     private final DatabaseReference databaseProblems = database.getReference("Problems");
-    FragmentManager fm = getFragmentManager();
+    private final FragmentManager fm = getFragmentManager();
 
+    //Adapter
     HomeCardAdapter adapter;
-    User user;
 
+    //Models
+    User user;
+    Problem problem;
+
+    //GUI
     private TextView welcome;
     private TextView level;
     private TextView asked;
     private NestedScrollView nestedScrollView;
 
+    String key;
+    boolean flag = true;
 
     @Nullable
     @Override
@@ -107,7 +113,6 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         problems = getDB(query, problems);
 
         showCards(problems);
-        sendTotal(problems.size());
 
         //TODO: Push post using Firebase generated ID, then find a way to increment the view.
         //TODO: Implement FirebaseRecyclerAdapter!
@@ -122,6 +127,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new HomeCardAdapter(getActivity(), problems);
         adapter.setClickListener(this);
+        sendTotal(adapter.getItemCount());
         recyclerView.setAdapter(adapter);
     } //showCards()
 
@@ -148,7 +154,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
-        }); //Get User's Post
+        });
         return list;
     } //getDB()
 
@@ -156,18 +162,40 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     //Increment view if a post is viewed. Send title and desc to detail via intent.
     @Override
     public void onItemClick(View view, int position) {
+        incrementSeen(position);
+        //Send data to DetailActivity
         String title = adapter.getItem(position).getTitleProblem();
         String desc = adapter.getItem(position).getDescProblem();
-        int id = adapter.getItem(position).getId();
-        int seen = adapter.getItem(position).getSeen();
-        seen++;
-
-//        databaseProblems.child(String.valueOf(id)).child("seen").setValue(seen);
-
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("desc", desc);
         startActivity(intent);
+    }
+
+    public void incrementSeen(int position) {
+        String title = adapter.getItem(position).getTitleProblem();
+        String poster = adapter.getItem(position).getPoster();
+        ArrayList<String> keylist = new ArrayList<String>();
+        int seen = adapter.getItem(position).getSeen()+1;
+
+        databaseProblems.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren() ) {
+                    Problem problem = snapshot.getValue(Problem.class);
+                    if(problem.getTitleProblem().equals(title) && problem.getPoster().equals(poster)) {
+                        key = snapshot.getKey();
+                        problem.setSeen(seen);
+                        databaseProblems.child(key).setValue(problem);
+                        databaseProblems.removeEventListener(this);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
     }
 
     public void scrollToTop() {

@@ -71,8 +71,8 @@ public class AskFragment extends Fragment {
                 int index = user_email.indexOf('@');
                 user_email = user_email.substring(0, index);
 
-                int total = getPostAmount(); //buggy method
-                storeProblemData(total, title_problem, problem_desc, user_email, date);
+                Problem problem = new Problem(title_problem, problem_desc, user_email, date, 0);
+                databaseProblems.push().setValue(problem);
 
                 startActivity(new Intent(getActivity(), SucceedActivity.class));
                 Objects.requireNonNull(getActivity()).finish();
@@ -80,14 +80,7 @@ public class AskFragment extends Fragment {
         });
     } //onViewCreated()
 
-    private void storeProblemData(int id, String title, String desc, String poster, long date) {
-        Problem problem = new Problem(title, desc, poster, date, 0, id);
-//        databaseProblems.child(String.valueOf(id)).setValue(problem);
-        databaseProblems.push().setValue(problem);
-    }
+    private void storeProblemData(String title, String desc, String poster, long date) {
 
-    private int getPostAmount() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        return prefs.getInt("postTotal", 0);
     }
 }
