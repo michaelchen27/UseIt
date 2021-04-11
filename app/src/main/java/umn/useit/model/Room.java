@@ -3,23 +3,27 @@ package umn.useit.model;
 public class Room {
 
     boolean status;
-    private final String user1;
-    private final String user2;
-    private final String problemTitle;
+    String solver;
+    String poster;
+    String problemTitle;
+    long problemTime;
+    public Room() {
+    }
 
-    public Room(String user1, String user2, String problemTitle, boolean status) {
-        this.user1 = user1;
-        this.user2 = user2;
+    public Room(String solver, String poster, String problemTitle, boolean status, long problemTime) {
+        this.solver = solver;
+        this.poster = poster;
         this.problemTitle = problemTitle;
         this.status = status;
+        this.problemTime = problemTime;
     }
 
-    public String getUser1() {
-        return user1;
+    public String getSolver() {
+        return solver;
     }
 
-    public String getUser2() {
-        return user2;
+    public String getPoster() {
+        return poster;
     }
 
     public boolean isStatus() {
@@ -28,5 +32,9 @@ public class Room {
 
     public String getProblemTitle() {
         return problemTitle;
+    }
+
+    public long getProblemTime() {
+        return problemTime;
     }
 }

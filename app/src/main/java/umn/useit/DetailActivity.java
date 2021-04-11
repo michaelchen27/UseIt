@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import umn.useit.home.DashboardActivity;
 import umn.useit.model.ChatMessage;
 import umn.useit.model.Problem;
 import umn.useit.model.Room;
@@ -43,8 +44,7 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
 
-//        String username = curr_email.substring(0, curr_email.indexOf('@'));
-
+        /* Catch Intent */
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String desc = intent.getStringExtra("desc");
@@ -65,27 +65,22 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         fab.setOnClickListener(view -> {
-            List<ChatMessage> chatMessages = new ArrayList<>();
-            /* Populate dummy data TODO: Delete this later*/
 
+            /* Populate dummy data TODO: Delete this later*/
             ChatMessage cm = new ChatMessage("Can you help me with \""+ title + "\" ?", poster);
-            chatMessages.add(cm);
-            ChatMessage cm2 = new ChatMessage("Sure thing!", curr_email);
-            chatMessages.add(cm2);
 
             /* Add room to Firebase DB */
-            Room room = new Room(curr_email, poster, title, true);
+            Room room = new Room(curr_email, poster, title, true, time);
 
             if (!curr_email.equals(poster)) {
                 databaseRooms.push().setValue(room, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                         String uniqueKey = ref.getKey();
-                        databaseRooms.child(uniqueKey).child("chats").setValue(chatMessages);
+                        databaseRooms.child(uniqueKey).child("chats").push().setValue(cm);
                     }
                 });
             }
-
 
             databaseProblems.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -105,9 +100,8 @@ public class DetailActivity extends AppCompatActivity {
                 }
             });
 
-
             finish();
-            startActivity(new Intent(DetailActivity.this, ChatActivity.class));
+            startActivity(new Intent(DetailActivity.this, DashboardActivity.class));
         });
     }
 }

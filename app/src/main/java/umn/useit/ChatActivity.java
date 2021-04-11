@@ -1,35 +1,50 @@
 package umn.useit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import umn.useit.model.ChatMessage;
+import umn.useit.model.Room;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemClickListener {
 
     private final FirebaseDatabase db = FirebaseDatabase.getInstance();
-    private final DatabaseReference databaseChat = db.getReference().child("Chats");
+    private final DatabaseReference databaseRooms = db.getReference().child("Rooms");
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String curr_email = currentUser.getEmail();
-    private FirebaseListAdapter<ChatMessage> adapter;
+
+
+    long time;
+
+    TextView poster;
+    ExtendedFloatingActionButton fab;
+    EditText input;
+
+    ChatAdapter chatAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +52,16 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         //GUI
-        EditText input = findViewById(R.id.input);
-        ExtendedFloatingActionButton fab = findViewById(R.id.fab);
+        input = findViewById(R.id.input);
+        poster = findViewById(R.id.poster);
+        fab = findViewById(R.id.fab);
         fab.setEnabled(false);
 
+        /* Catch Intent */
+        Intent intent = getIntent();
+        time = intent.getLongExtra("timestamp", 0);
+
+        /* Disable send button if edit text is empty */
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -56,59 +77,80 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-//        //Display message sender using stripped email.
-//        int index = curr_email.indexOf('@');
-//        String username = curr_email.substring(0, index);
+        storeMessage(time);
 
-        //Send message button, if EditText is empty, the send button is disabled.
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                databaseChat
-                        .push()
-                        .setValue(new ChatMessage(input.getText().toString(), curr_email));
-                input.setText("");
+
+
+    } //onCreate()
+
+    public void showChats(List<ChatMessage> chats) {
+        RecyclerView recyclerView = findViewById(R.id.rvChatList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+//        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        chatAdapter = new ChatAdapter(this, chats);
+        recyclerView.setAdapter(chatAdapter);
+
+        recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (bottom < oldBottom) {
+                recyclerView.post(() -> recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1));
             }
         });
 
-        displayChatMessages();
-    } //onCreate()
 
-    private void displayChatMessages() {
-        ListView listOfMessages = findViewById(R.id.list_of_messages);
+    } //showChats()
 
-        adapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class, R.layout.message, databaseChat) {
+    public void storeMessage(long time) {
+        databaseRooms.addValueEventListener(new ValueEventListener() {
             @Override
-            protected void populateView(View v, ChatMessage model, int position) {
-                TextView messageText = v.findViewById(R.id.message_text);
-                TextView messageUser = v.findViewById(R.id.message_user);
-                TextView messageTime = v.findViewById(R.id.message_time);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Room room = snapshot.getValue(Room.class);
+                    if (room.getProblemTime() == time) {
+                        String key = snapshot.getKey();
 
-                int index = curr_email.indexOf('@');
-                String username = curr_email.substring(0, index);
+                        /* Send message button, if EditText is empty, the send button is disabled. */
+                        fab.setOnClickListener(view -> {
+                            databaseRooms.child(key).child("chats")
+                                    .push()
+                                    .setValue(new ChatMessage(input.getText().toString(), curr_email));
+                            input.setText("");
+                        });
 
-                //TODO: Color changed when content in scroll view is not visible.
-                if (model.getMessageUser().equals(username))
-                    messageText.setBackgroundColor(v.getResources().getColor(R.color.light_teal));
+                        DatabaseReference databaseChats = databaseRooms.child(key);
 
-                messageUser.setText(model.getMessageUser());
-                messageText.setText(model.getMessageText());
-                messageTime.setText(DateFormat.format("hh:mm a", model.getMessageTime()));
+                        databaseChats.child("chats").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                                List<ChatMessage> chatMessages = new ArrayList<>();
+                                if (snapshot2.exists()) {
+                                    for (DataSnapshot dataSnapshot2 : snapshot2.getChildren()) {
+                                        ChatMessage chatMessage = dataSnapshot2.getValue(ChatMessage.class);
+                                        chatMessages.add(chatMessage);
+                                    }
+                                    showChats(chatMessages);
+                                }
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
+
+                    }
+                }
             }
-        };
-        listOfMessages.setAdapter(adapter);
-    } //displayChatMessages()
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+    } //incrementView();
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        displayChatMessages();
+    public void onItemClick(View view, int position) {
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        displayChatMessages();
-    }
 }

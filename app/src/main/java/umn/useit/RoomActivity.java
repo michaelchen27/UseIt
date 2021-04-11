@@ -1,5 +1,6 @@
 package umn.useit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,6 +10,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +29,8 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
 
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference databaseRooms = database.getReference("Rooms");
+    private final FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
+    String curr_email = curr_user.getEmail();
 
     RoomAdapter adapter;
     Room room;
@@ -35,8 +40,33 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
-//        showRooms(rooms);
+        List<Room> rooms = new ArrayList<>();
+        getDB(databaseRooms, rooms);
+
+
     } //onCreate()
+
+    //Get data from DB with ListenerForSingleValueEvent
+    public List<Room> getDB(Query query, List<Room> list) {
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Room room = dataSnapshot.getValue(Room.class);
+                        if (room.getSolver().equals(curr_email) || room.getPoster().equals(curr_email))
+                            list.add(room);
+                    }
+                    showRooms(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        }); //Get User's Post
+        return list;
+    } //getDB()
 
     public void showRooms(List<Room> rooms) {
         RecyclerView recyclerView = findViewById(R.id.rvRoom);
@@ -52,29 +82,14 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
         recyclerView.setAdapter(adapter);
     } //showRooms()
 
-    //Get data from DB with ListenerForSingleValueEvent
-    public List<Room> getDB(Query query, List<Room> list) {
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Room room = dataSnapshot.getValue(Room.class);
-                        list.add(room);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        }); //Get User's Post
-        return list;
-    } //getDB()
 
     @Override
     public void onItemClick(View view, int position) {
-        //TODO: When room chat is clicked, show all messages between 2 users.
 
+        // Send data to ChatActivity
+        Intent i = new Intent(RoomActivity.this, ChatActivity.class);
+        i.putExtra("timestamp", adapter.getItem(position).getProblemTime());
+        finish();
+        startActivity(i);
     }
 }
