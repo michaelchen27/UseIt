@@ -48,6 +48,9 @@ public class DashboardActivity extends AppCompatActivity {
     private final DatabaseReference databaseProblems = database.getReference("Problems");
     Fragment fCurr = fHome;
 
+    int num;
+
+
     private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -119,17 +122,17 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Problem> problems = new ArrayList<>();
+                num = (int) snapshot.getChildrenCount();
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Problem problem = dataSnapshot.getValue(Problem.class);
                         if(problem.isAvailable()) problems.add(problem);
 
                     }
-
                     HomeFragment fHome = (HomeFragment) fm.findFragmentByTag("HOME_FRAGMENT");
+
                     if (fHome != null) {
                         fHome.showCards(problems);
-
                     }
                 }
             }

@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,14 +27,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import umn.useit.home.DashboardActivity;
 import umn.useit.model.ChatMessage;
+import umn.useit.model.Problem;
 import umn.useit.model.Room;
 
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemClickListener {
 
     private final FirebaseDatabase db = FirebaseDatabase.getInstance();
     private final DatabaseReference databaseRooms = db.getReference().child("Rooms");
+    private final DatabaseReference databaseProblems = db.getReference("Problems");
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     String curr_email = currentUser.getEmail();
@@ -50,6 +57,9 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        // Enable back button on ActionBar
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         //GUI
         input = findViewById(R.id.input);
@@ -79,22 +89,37 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
 
         storeMessage(time);
 
+        // If an Android device is using keyboard, the Enter button will send the message.
+        input.setOnEditorActionListener((v, actionId, event) -> {
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) && (!input.getText().toString().equals(""))) {
+                fab.callOnClick();
+            }
+            return false;
+        });
+
+
 
 
     } //onCreate()
+
+    /* Menu */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     public void showChats(List<ChatMessage> chats) {
         RecyclerView recyclerView = findViewById(R.id.rvChatList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-//        linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         chatAdapter = new ChatAdapter(this, chats);
         recyclerView.setAdapter(chatAdapter);
 
         recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
-                recyclerView.post(() -> recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1));
+                recyclerView.post(() -> recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1));
             }
         });
 
@@ -151,6 +176,52 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
 
     @Override
     public void onItemClick(View view, int position) {
+    }
+
+    @Override //Back Button
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            case R.id.nav_solved:
+                removeRoom();
+                break;
+            case R.id.nav_not_solved:
+                removeRoom();
+                restorePost();
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void removeRoom() {
+        databaseRooms.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Room room = snapshot.getValue(Room.class);
+                    if (room.getProblemTime() == time) {
+                        room.setStatus(false);
+                        databaseRooms.child(snapshot.getKey()).setValue(room);
+                        databaseRooms.removeEventListener(this);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+        startActivity(new Intent(ChatActivity.this, DashboardActivity.class));
+    }
+
+
+    // Post shows up in Home again.
+    public void restorePost() {
+
+
     }
 
 }
