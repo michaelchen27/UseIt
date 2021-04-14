@@ -1,6 +1,7 @@
 package umn.useit;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatMessage chatMessage = mData.get(position);
-        holder.message_user.setText(chatMessage.getMessageUser());
+        holder.message_user.setText(chatMessage.getMessageUser().substring(0, chatMessage.getMessageUser().indexOf('@')));
         holder.message_text.setText(chatMessage.getMessageText());
+        holder.message_time.setText(DateFormat.format("hh:mm a", chatMessage.getMessageTime()));
     }
 
     @Override
@@ -69,13 +71,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     //Store and recycler the views as they are scrolled off screen.
     public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView message_user, message_text;
+        TextView message_user, message_text, message_time;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             message_user = itemView.findViewById(R.id.message_user);
             message_text = itemView.findViewById(R.id.message_text);
-//            itemView.setOnClickListener(this);
+            message_time = itemView.findViewById(R.id.message_time);
         }
 
         @Override

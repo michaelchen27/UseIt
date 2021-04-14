@@ -2,6 +2,7 @@ package umn.useit;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import umn.useit.home.RoomAdapter;
 import umn.useit.model.Room;
@@ -40,6 +42,9 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        // Enable back button on ActionBar
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
         List<Room> rooms = new ArrayList<>();
         getDB(databaseRooms, rooms);
 
@@ -55,7 +60,7 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Room room = dataSnapshot.getValue(Room.class);
                         if (room.getSolver().equals(curr_email) || room.getPoster().equals(curr_email))
-                            list.add(room);
+                            if (room.isStatus()) list.add(room);
                     }
                     showRooms(list);
                 }
@@ -91,5 +96,14 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
         i.putExtra("timestamp", adapter.getItem(position).getProblemTime());
         finish();
         startActivity(i);
+    }
+
+    @Override //Back Button
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
