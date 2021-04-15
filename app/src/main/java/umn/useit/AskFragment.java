@@ -38,6 +38,7 @@ import umn.useit.prehome.MainActivity;
 
 import static android.app.Activity.RESULT_OK;
 
+//testing my github skills
 public class AskFragment extends Fragment {
 
     private final FirebaseDatabase db = FirebaseDatabase.getInstance();
