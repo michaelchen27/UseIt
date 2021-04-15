@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,8 +15,8 @@
 
         <activity
             android:name=".prehome.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,25 +41,34 @@
 
         <activity
             android:name=".home.DashboardActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.UseIt.NoActionBar" />
 
         <activity
             android:name=".DetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.UseIt.NoActionBar" />
 
         <activity
             android:name=".ChatActivity"
-            android:theme="@style/Theme.UseIt.NoActionBar" />
+            android:label="Chat"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UseIt" />
 
         <activity
             android:name=".RoomActivity"
-            android:theme="@style/Theme.UseIt.NoActionBar" />
+            android:label="Active Sessions"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.UseIt" />
 
-        <activity android:name=".NotificationActivity"
-            android:label="Notifications"/>
+        <activity
+            android:name=".NotificationActivity"
+            android:label="Notifications"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".SucceedActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.UseIt.NoActionBar" />
 
     </application>

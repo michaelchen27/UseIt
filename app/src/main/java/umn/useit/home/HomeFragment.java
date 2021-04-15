@@ -13,11 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +36,8 @@ import umn.useit.DetailActivity;
 import umn.useit.R;
 import umn.useit.model.Problem;
 import umn.useit.model.User;
+import umn.useit.prehome.MainActivity;
+import umn.useit.prehome.SplashActivity;
 
 public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickListener {
 
@@ -46,6 +48,8 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     private final FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
 
     String email = curr_user.getEmail();
+    ShimmerFrameLayout shimmerFrameLayout;
+    LinearLayout linearLayout;
 
     //Adapter
     HomeCardAdapter adapter;
@@ -53,14 +57,9 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     //Models
     User user;
 
-    int askedCounter;
-    boolean askedCount = true;
-
 
     //GUI
-    private TextView welcome;
-    private TextView level;
-    private TextView asked;
+    private TextView welcome, level, asked, solved;
     private NestedScrollView nestedScrollView;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -74,14 +73,11 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // GUI Init
-        welcome = Objects.requireNonNull(getView()).findViewById(R.id.welcome);
-        level = Objects.requireNonNull(getView()).findViewById(R.id.level);
-        asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
-        nestedScrollView = getView().findViewById(R.id.n_scrollview);
-        swipeRefresh = getView().findViewById(R.id.swipeRefreshLayout);
 
+        // GUI Init
+        init();
         email = email.substring(0, email.indexOf("@"));
+        shimmerLoading(3);
 
         /* Get current user firstname and lastname */
         String curr_userUid = curr_user.getUid();
@@ -97,65 +93,68 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
-                if (user != null)
+                if (user != null) {
                     welcome.setText(String.format("Hi, %s!", user.getFirstname()));
+                    asked.setText(String.valueOf(user.getAsked()));
+                    solved.setText(String.valueOf(user.getSolved()));
+                }
+
+
             }
         });
 
         /* Retrieve updated data on swipe refresh */
         swipeRefresh.setColorSchemeResources(R.color.teal);
         swipeRefresh.setOnRefreshListener(() -> {
+            shimmerLoading(3);
             databaseProblems.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     List<Problem> problems = new ArrayList<>();
-
                     if (snapshot.exists()) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Problem problem = dataSnapshot.getValue(Problem.class);
-                            if(problem.isAvailable()) problems.add(problem);
-
+                            if (problem.isAvailable()) problems.add(problem);
                         }
                         showCards(problems);
                     }
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
             });
-            new Handler().postDelayed(() -> swipeRefresh.setRefreshing(false), 2000);
+            new Handler().postDelayed(() -> {
+                swipeRefresh.setRefreshing(false);
+                linearLayout.removeAllViews();
+            }, 2000);
         });
 
-        shimmerLoading(3);
     } //onViewCreated()
 
-    public void shimmerLoading(int count) {
+    public void init() {
+        shimmerFrameLayout = getView().findViewById(R.id.shimmerLayout);
+        linearLayout = getView().findViewById(R.id.ll_shimmer);
+        welcome = Objects.requireNonNull(getView()).findViewById(R.id.welcome);
+        level = Objects.requireNonNull(getView()).findViewById(R.id.level);
+        asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
+        solved = Objects.requireNonNull(getView()).findViewById(R.id.solved);
+        nestedScrollView = getView().findViewById(R.id.n_scrollview);
+        swipeRefresh = getView().findViewById(R.id.swipeRefreshLayout);
+    }
+
+    public void shimmerLoading(int size) {
         /*Add shimmer loading effect on start*/
-        LinearLayout linearLayout = getView().findViewById(R.id.ll_shimmer);
-        if (count < 3) {
-            for (int i = 0; i < count; i++) {
-                View child = getLayoutInflater().inflate(R.layout.home_card_shimmer, null);
-                linearLayout.addView(child);
-            }
-        } else {
-            for (int i = 0; i < 3; i++) {
-                View child = getLayoutInflater().inflate(R.layout.home_card_shimmer, null);
-                linearLayout.addView(child);
-            }
+        for (int i = 0; i < size; i++) {
+            View child = getLayoutInflater().inflate(R.layout.home_card_shimmer, null);
+            linearLayout.addView(child);
         }
-    }// shimmerLoading
+    }
+    // shimmerLoading
 
     /*  Show cards on Homescreen using RecyclerView. Firebase doesn't provide descending order query,
         so I will have to reverse the list order. */
     public void showCards(List<Problem> problems) {
-        for (Problem problem : problems) {
-            if (problem.getPoster().equals(email) && askedCount) {
-                askedCounter++;
-            }
-        }
-        askedCount = false;
-
-        asked.setText(String.valueOf(askedCounter));
         RecyclerView recyclerView = getView().findViewById(R.id.rvHomeCard);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setReverseLayout(true);
@@ -197,7 +196,8 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
 
     } //incrementView();

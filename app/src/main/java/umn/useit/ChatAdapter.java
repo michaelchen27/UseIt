@@ -1,12 +1,16 @@
 package umn.useit;
 
 import android.content.Context;
+import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +22,9 @@ import umn.useit.R;
 import umn.useit.model.ChatMessage;
 import umn.useit.model.Room;
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter {
+    private static final int VIEW_TYPE_MESSAGE_SENT = 1;
+    private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
     private final List<ChatMessage> mData;
     private final LayoutInflater mInflater;
 
@@ -33,18 +39,49 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         this.mData = data;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        ChatMessage message = (ChatMessage) mData.get(position);
+
+        if (message.getMessageUser().equals(curr_email)) {
+            return VIEW_TYPE_MESSAGE_SENT;
+        } else {
+            return VIEW_TYPE_MESSAGE_RECEIVED;
+        }
+    }
+
     @NonNull
     @Override
-    public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.message, parent, false);
-        return new ChatViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+
+        if (viewType == VIEW_TYPE_MESSAGE_SENT) {
+            view = mInflater.inflate(R.layout.message_right, parent, false);
+            return new SentMessageHolder(view);
+
+        } else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
+            view = mInflater.inflate(R.layout.message, parent, false);
+            return new ReceivedMessageHolder(view);
+
+        }
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
-        ChatMessage chatMessage = mData.get(position);
-        holder.message_user.setText(chatMessage.getMessageUser());
-        holder.message_text.setText(chatMessage.getMessageText());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        ChatMessage message = mData.get(position);
+
+        switch(holder.getItemViewType()) {
+            case VIEW_TYPE_MESSAGE_SENT:
+
+                ((SentMessageHolder) holder).bind(message);
+
+                break;
+
+            case VIEW_TYPE_MESSAGE_RECEIVED:
+                ((ReceivedMessageHolder) holder).bind(message);
+
+        }
     }
 
     @Override
@@ -66,21 +103,42 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         void onItemClick(View view, int position);
     }
 
-    //Store and recycler the views as they are scrolled off screen.
-    public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class SentMessageHolder extends RecyclerView.ViewHolder {
 
-        TextView message_user, message_text;
+        TextView message_user, message_text, message_time;
 
-        public ChatViewHolder(@NonNull View itemView) {
+        SentMessageHolder(View itemView) {
+            super(itemView);
+            message_text = itemView.findViewById(R.id.message_text);
+            message_time = itemView.findViewById(R.id.message_time);
+
+            //bind views
+        }
+
+        void bind(ChatMessage message) {
+            message_text.setText(message.getMessageText());
+            message_time.setText(DateFormat.format("hh:mm a", message.getMessageTime()));
+        }
+    }
+
+    private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+
+        TextView message_user, message_text, message_time;
+
+        ReceivedMessageHolder(View itemView) {
             super(itemView);
             message_user = itemView.findViewById(R.id.message_user);
             message_text = itemView.findViewById(R.id.message_text);
-//            itemView.setOnClickListener(this);
+            message_time = itemView.findViewById(R.id.message_time);
+
+            //bind views
         }
 
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        void bind(ChatMessage message) {
+            //set values
+            message_user.setText(message.getMessageUser().substring(0, message.getMessageUser().indexOf('@')));
+            message_text.setText(message.getMessageText());
+            message_time.setText(DateFormat.format("hh:mm a", message.getMessageTime()));
         }
     }
 }
