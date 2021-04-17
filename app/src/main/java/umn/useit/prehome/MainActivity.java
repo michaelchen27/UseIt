@@ -16,6 +16,8 @@ import umn.useit.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     public static Activity ac_main;
     private ViewPager mSlideViewPager;
     private LinearLayout mDotLayout;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         addDotsIndicator(0);
         mSlideViewPager.addOnPageChangeListener(viewListener);
+
 
     } //onCreate()
 

@@ -1,4 +1,4 @@
-package umn.useit;
+package umn.useit.chat;
 
 import android.content.Context;
 import android.text.format.DateFormat;
