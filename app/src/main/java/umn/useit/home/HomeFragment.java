@@ -57,7 +57,6 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     //Models
     User user;
 
-
     //GUI
     private TextView welcome, level, asked, solved;
     private NestedScrollView nestedScrollView;

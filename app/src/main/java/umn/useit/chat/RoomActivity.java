@@ -1,4 +1,4 @@
-package umn.useit;
+package umn.useit.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import umn.useit.R;
 import umn.useit.home.RoomAdapter;
 import umn.useit.model.Room;
 
@@ -61,6 +62,8 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
                         Room room = dataSnapshot.getValue(Room.class);
                         if (room.getSolver().equals(curr_email) || room.getPoster().equals(curr_email))
                             if (room.isStatus()) list.add(room);
+                        query.removeEventListener(this);
+
                     }
                     showRooms(list);
                 }
@@ -69,6 +72,7 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
+
         }); //Get User's Post
         return list;
     } //getDB()
@@ -94,7 +98,6 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
         // Send data to ChatActivity
         Intent i = new Intent(RoomActivity.this, ChatActivity.class);
         i.putExtra("timestamp", adapter.getItem(position).getProblemTime());
-        finish();
         startActivity(i);
     }
 

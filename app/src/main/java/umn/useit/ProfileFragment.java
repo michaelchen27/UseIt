@@ -30,12 +30,13 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Button btn_logout = (Button) Objects.requireNonNull(getView()).findViewById(R.id.btn_logout);
 
-        btn_logout.setOnClickListener(new View.OnClickListener() { // LOG OUT button clicked
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getActivity(), MainActivity.class));
-            }
+        // LOG OUT button clicked
+        btn_logout.setOnClickListener(v -> {
+
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            Objects.requireNonNull(getActivity()).finish();
+
         });
     } //onViewCreated()
 }
