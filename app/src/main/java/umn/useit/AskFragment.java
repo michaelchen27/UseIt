@@ -88,18 +88,22 @@ public class AskFragment extends Fragment {
                 String user_email = mAuth.getCurrentUser().getEmail();
                 long date = System.currentTimeMillis();
 
-                Problem problem = new Problem(title_problem, problem_desc, user_email, date, 0, true);
                 //String key = databaseProblems.push().setValue(problem).getKey();
-                DatabaseReference pushedItem = databaseProblems.push();
-                pushedItem.setValue(problem);
-                String key = pushedItem.getKey();
 
                 if (imageUri != null) {
                     ProgressDialog progressDialog = new ProgressDialog(getActivity());
                     progressDialog.setTitle("Uploading");
                     progressDialog.show();
 
+
+                    DatabaseReference pushedItem = databaseProblems.push();
+                    String key = pushedItem.getKey();
                     StorageReference ref = storageReference.child("images/"+key+"img");
+                    String imgUrl = String.valueOf(ref.getDownloadUrl());
+                    Problem problem = new Problem(title_problem, problem_desc, user_email, date, 0, true, key);
+                    problem.setImgUrl(imgUrl);
+                    pushedItem.setValue(problem);
+
                     ref.putFile(imageUri).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
@@ -117,6 +121,11 @@ public class AskFragment extends Fragment {
                                             + (int) progress + "%");
                         }
                     });
+                }else{
+                    DatabaseReference pushedItem = databaseProblems.push();
+                    String key = pushedItem.getKey();
+                    Problem problem = new Problem(title_problem, problem_desc, user_email, date, 0, true, key);
+                    pushedItem.setValue(problem);
                 }
 
                 startActivity(new Intent(getActivity(), SucceedActivity.class));
