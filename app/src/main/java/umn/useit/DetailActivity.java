@@ -2,6 +2,7 @@ package umn.useit;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -57,7 +58,7 @@ public class DetailActivity extends AppCompatActivity {
 
         /* Catch Intent */
         Intent intent = getIntent();
-        String imgUrl = null;
+        String imgUrl = intent.getStringExtra("imgurl");
         String id = intent.getStringExtra("id");
         String title = intent.getStringExtra("title");
         String desc = intent.getStringExtra("desc");
@@ -69,25 +70,18 @@ public class DetailActivity extends AppCompatActivity {
         problemDesc.setText(desc);
         toolBarLayout.setTitle(title);
 
-        try {
-            StorageReference imageRef = storageReference.child("images/"+id+"img");
-            File localFile = File.createTempFile("images", "jpg");
-            String path = localFile.getAbsolutePath();
-            imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    // Local temp file has been created
-                    Picasso.with(DetailActivity.this).load(path).into(problemPhoto);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        storageReference.child("images/"+id+"img").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                Picasso.with(DetailActivity.this).load(uri).into(problemPhoto);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
         ExtendedFloatingActionButton fab = findViewById(R.id.fab);
         if (curr_email.equals(poster)) {
             fab.setText("Waiting for Solver");
