@@ -170,6 +170,12 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
 
         // Send data to DetailActivity
         Intent i = new Intent(getActivity(), DetailActivity.class);
+        try {
+            i.putExtra("imgurl", adapter.getItem(position).getImgUrl());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        i.putExtra("id", adapter.getItem(position).getId());
         i.putExtra("title", adapter.getItem(position).getTitleProblem());
         i.putExtra("desc", adapter.getItem(position).getDescProblem());
         i.putExtra("poster", adapter.getItem(position).getPoster());
