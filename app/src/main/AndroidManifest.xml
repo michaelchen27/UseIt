@@ -50,13 +50,13 @@
             android:theme="@style/Theme.UseIt.NoActionBar" />
 
         <activity
-            android:name=".ChatActivity"
+            android:name=".chat.ChatActivity"
             android:label="Chat"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UseIt" />
 
         <activity
-            android:name=".RoomActivity"
+            android:name=".chat.RoomActivity"
             android:label="Active Sessions"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UseIt" />
@@ -70,6 +70,14 @@
             android:name=".SucceedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.UseIt.NoActionBar" />
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
 </manifest>

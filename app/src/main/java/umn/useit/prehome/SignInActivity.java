@@ -28,6 +28,7 @@ import umn.useit.R;
 public class SignInActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+
     private FirebaseAuth mAuth;
     private ProgressBar spinner;
 

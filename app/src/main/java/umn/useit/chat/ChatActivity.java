@@ -1,4 +1,4 @@
-package umn.useit;
+package umn.useit.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import umn.useit.R;
 import umn.useit.home.DashboardActivity;
 import umn.useit.model.ChatMessage;
-import umn.useit.model.Problem;
 import umn.useit.model.Room;
 
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemClickListener {
@@ -98,8 +98,6 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
         });
 
 
-
-
     } //onCreate()
 
     /* Menu */
@@ -133,6 +131,14 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Room room = snapshot.getValue(Room.class);
                     if (room.getProblemTime() == time) {
+
+                        if (getSupportActionBar() != null) {
+                            if (curr_email.equals(room.getSolver()))
+                                getSupportActionBar().setTitle(room.getPoster().substring(0, room.getPoster().indexOf('@')));
+                            else
+                                getSupportActionBar().setTitle(room.getSolver().substring(0, room.getSolver().indexOf('@')));
+                        }
+
                         String key = snapshot.getKey();
 
                         /* Send message button, if EditText is empty, the send button is disabled. */
@@ -172,7 +178,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
             }
         });
 
-    } //incrementView();
+    }
 
     @Override
     public void onItemClick(View view, int position) {
@@ -181,7 +187,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
     @Override //Back Button
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
                 return true;
@@ -212,7 +218,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
         startActivity(new Intent(ChatActivity.this, DashboardActivity.class));
     }

@@ -6,8 +6,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,11 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import umn.useit.AskFragment;
-import umn.useit.ChatActivity;
 import umn.useit.NotificationActivity;
 import umn.useit.ProfileFragment;
 import umn.useit.R;
-import umn.useit.RoomActivity;
+import umn.useit.chat.RoomActivity;
 import umn.useit.model.Problem;
 
 public class DashboardActivity extends AppCompatActivity {

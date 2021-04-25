@@ -20,6 +20,7 @@
     <string name="post_amount" />
     <string name="post_amount_default">0</string>
     <string name="title_activity_detail">ScrollingActivity</string>
+    <string name="msg_token_fmt"></string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    tools:context=".ChatActivity">
+    tools:context=".chat.ChatActivity">
 
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -18,9 +18,9 @@
         android:backgroundTint="@color/light_teal"
         android:clickable="true"
         android:focusable="true"
-        app:elevation="0dp"
-        android:shadowColor="@color/white"
         android:outlineSpotShadowColor="@color/transparent"
+        android:shadowColor="@color/white"
+        app:elevation="0dp"
         app:fabSize="mini"
         app:icon="@drawable/send" />
 
@@ -40,7 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Type your message here"
-            android:inputType="textCapSentences"
+            android:inputType="textMultiLine|textImeMultiLine"
+            android:lines="2"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,8 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/fab"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentStart="true"/>
+        android:layout_marginBottom="16dp" />
 
 </RelativeLayout>
