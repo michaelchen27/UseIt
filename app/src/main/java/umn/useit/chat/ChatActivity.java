@@ -32,6 +32,7 @@ import java.util.Objects;
 import umn.useit.R;
 import umn.useit.home.DashboardActivity;
 import umn.useit.model.ChatMessage;
+import umn.useit.model.Problem;
 import umn.useit.model.Room;
 
 public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemClickListener {
@@ -45,6 +46,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
 
 
     long time;
+    String id;
 
     TextView poster;
     ExtendedFloatingActionButton fab;
@@ -70,6 +72,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
         /* Catch Intent */
         Intent intent = getIntent();
         time = intent.getLongExtra("timestamp", 0);
+        id = intent.getStringExtra("id");
 
         /* Disable send button if edit text is empty */
         input.addTextChangedListener(new TextWatcher() {
@@ -195,8 +198,8 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
                 removeRoom();
                 break;
             case R.id.nav_not_solved:
+                restorePost(id);
                 removeRoom();
-                restorePost();
 
         }
 
@@ -226,7 +229,26 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
 
 
     // Post shows up in Home again.
-    public void restorePost() {
+    public void restorePost(String id) {
+
+        databaseProblems.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for ( DataSnapshot snapshot2 : dataSnapshot.getChildren()){
+                    Problem prob = snapshot2.getValue(Problem.class);
+                    if(prob.getId() == id){
+                        prob.setAvailable(true);
+                        databaseProblems.child(snapshot2.getKey()).setValue(prob);
+                        databaseProblems.removeEventListener(this);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
     }

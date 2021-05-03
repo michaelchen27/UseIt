@@ -98,6 +98,7 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.ItemC
         // Send data to ChatActivity
         Intent i = new Intent(RoomActivity.this, ChatActivity.class);
         i.putExtra("timestamp", adapter.getItem(position).getProblemTime());
+        i.putExtra("idProblem",adapter.getItem(position).getProblemId());
         startActivity(i);
     }
 
