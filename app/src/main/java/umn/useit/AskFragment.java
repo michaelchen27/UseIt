@@ -88,8 +88,7 @@ public class AskFragment extends Fragment {
                 String user_email = mAuth.getCurrentUser().getEmail();
                 long date = System.currentTimeMillis();
 
-                //String key = databaseProblems.push().setValue(problem).getKey();
-
+                //if user decided to upload a picture, run this code
                 if (imageUri != null) {
                     ProgressDialog progressDialog = new ProgressDialog(getActivity());
                     progressDialog.setTitle("Uploading");

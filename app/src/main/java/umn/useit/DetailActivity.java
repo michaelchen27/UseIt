@@ -97,7 +97,7 @@ public class DetailActivity extends AppCompatActivity {
             ChatMessage cm = new ChatMessage("Can you help me with \"" + title + "\" ?", poster);
 
             /* Add room to Firebase DB */
-            Room room = new Room(curr_email, poster, title, true, time);
+            Room room = new Room(curr_email, poster, title, true, time,id);
 
             if (!curr_email.equals(poster)) {
                 databaseRooms.push().setValue(room, new DatabaseReference.CompletionListener() {

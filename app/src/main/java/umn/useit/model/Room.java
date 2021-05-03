@@ -6,16 +6,23 @@ public class Room {
     String solver;
     String poster;
     String problemTitle;
+    String problemId;
     long problemTime;
     public Room() {
     }
 
-    public Room(String solver, String poster, String problemTitle, boolean status, long problemTime) {
+    public Room(String solver, String poster, String problemTitle, boolean status, long problemTime, String problemId) {
         this.solver = solver;
         this.poster = poster;
         this.problemTitle = problemTitle;
         this.status = status;
         this.problemTime = problemTime;
+        this.problemId = problemId;
+    }
+    public String getProblemId(){return problemId;}
+
+    public void setProblemId(String problemId){
+        this.problemId = problemId;
     }
 
     public String getSolver() {
