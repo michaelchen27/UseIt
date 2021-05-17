@@ -14,6 +14,11 @@
         android:theme="@style/Theme.UseIt">
 
         <activity
+            android:name=".DetailActivity"
+            android:label="@string/title_activity_detail"
+            android:theme="@style/Theme.UseIt.NoActionBar" />
+
+        <activity
             android:name=".prehome.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
