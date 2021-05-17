@@ -42,8 +42,7 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
     public void onBindViewHolder(@NonNull HomeCardViewHolder holder, int position) {
         Problem problem = mData.get(position);
         holder.tvTitleProblem.setText(problem.getTitleProblem());
-        holder.tvPoster.setText(problem.getPoster());
-
+        holder.tvPoster.setText(problem.getPoster().substring(0, problem.getPoster().indexOf('@')));
         holder.tvDate.setText(DateFormat.format("dd MMM yy · hh:mm a", problem.getTime()));
         holder.tvSeen.setText(String.valueOf(problem.getSeen()));
     }
@@ -52,6 +51,21 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    Problem getItem(int id) {
+        return mData.get(id);
+    }
+
+    //Allow click events to be caught.
+    void setClickListener(ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+
+    //ItemClicKListener
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 
     //Store and recycler the views as they are scrolled off screen.
@@ -72,22 +86,8 @@ public class HomeCardAdapter extends RecyclerView.Adapter<HomeCardAdapter.HomeCa
 
         @Override
         public void onClick(View view) {
-            if(mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
-    }
-
-    Problem getItem(int id) {
-        return mData.get(id);
-    }
-
-    //Allow click events to be caught.
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
-    //ItemClicKListener
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
     }
 }
 

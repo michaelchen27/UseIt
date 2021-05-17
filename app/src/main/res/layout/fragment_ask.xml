@@ -46,16 +46,27 @@
         app:layout_constraintLeft_toLeftOf="@id/ProblemDesc"
         app:layout_constraintTop_toBottomOf="@id/ProblemDesc" />
 
+    <ImageView
+        android:id="@+id/displayPhoto"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AddPhoto"
+        android:layout_marginTop="20dp"
+        />
+
     <Button
         android:id="@+id/SubmitProblem"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="150dp"
         android:text="@string/submit_problem"
         android:textColor="@color/white"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintLeft_toLeftOf="@id/ProblemDesc"
         app:layout_constraintRight_toRightOf="@id/ProblemDesc"
-        app:layout_constraintTop_toBottomOf="@id/ProblemDesc" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -69,6 +80,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
+        app:layout_constraintGuide_end="391dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

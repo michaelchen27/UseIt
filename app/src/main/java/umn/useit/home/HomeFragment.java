@@ -2,21 +2,20 @@ package umn.useit.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
@@ -38,23 +36,31 @@ import umn.useit.DetailActivity;
 import umn.useit.R;
 import umn.useit.model.Problem;
 import umn.useit.model.User;
+import umn.useit.prehome.MainActivity;
+import umn.useit.prehome.SplashActivity;
 
 public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickListener {
 
-    //Firebase
+    //Firebase Database
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference databaseUsers = database.getReference("Users");
     private final DatabaseReference databaseProblems = database.getReference("Problems");
-    FragmentManager fm = getFragmentManager();
+    private final FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
 
+    String email = curr_user.getEmail();
+    ShimmerFrameLayout shimmerFrameLayout;
+    LinearLayout linearLayout;
+
+    //Adapter
     HomeCardAdapter adapter;
+
+    //Models
     User user;
 
-    private TextView welcome;
-    private TextView level;
-    private TextView asked;
+    //GUI
+    private TextView welcome, level, asked, solved;
     private NestedScrollView nestedScrollView;
-
+    private SwipeRefreshLayout swipeRefresh;
 
     @Nullable
     @Override
@@ -66,25 +72,15 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //GUI Init
-        welcome = Objects.requireNonNull(getView()).findViewById(R.id.welcome);
-        level = Objects.requireNonNull(getView()).findViewById(R.id.level);
-        asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
-        nestedScrollView = getView().findViewById(R.id.n_scrollview);
 
-        // Add shimmer
-        ShimmerFrameLayout shimmerFrameLayout = getView().findViewById(R.id.shimmerLayout);
-        LinearLayout linearLayout = getView().findViewById(R.id.ll_shimmer);
-        View child = getLayoutInflater().inflate(R.layout.home_card_shimmer, null);
-        linearLayout.addView(child);
+        // GUI Init
+        init();
+        email = email.substring(0, email.indexOf("@"));
+        shimmerLoading(3);
 
-        // Init =============================================================================
-        FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
-
+        /* Get current user firstname and lastname */
         String curr_userUid = curr_user.getUid();
         DatabaseReference userRow = databaseUsers.child(curr_userUid);
-
-        //Get user =======================================================================================
         userRow.runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
@@ -96,23 +92,67 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
-                if (user != null)
-                    welcome.setText(String.format("Hi, %s %s!", user.getFirstname(), user.getLastname()));
+                if (user != null) {
+                    welcome.setText(String.format("Hi, %s!", user.getFirstname()));
+                    asked.setText(String.valueOf(user.getAsked()));
+                    solved.setText(String.valueOf(user.getSolved()));
+                }
+
+
             }
-        }); //runTransaction()
+        });
 
-        //Get All User's Post ============================================================================
-        Query query = databaseProblems.orderByChild("date");
-        List<Problem> problems = new ArrayList<>();
-        problems = getDB(query, problems);
-        showCards(problems);
-        sendTotal(problems.size());
+        /* Retrieve updated data on swipe refresh */
+        swipeRefresh.setColorSchemeResources(R.color.teal);
+        swipeRefresh.setOnRefreshListener(() -> {
+            shimmerLoading(3);
+            databaseProblems.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<Problem> problems = new ArrayList<>();
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Problem problem = dataSnapshot.getValue(Problem.class);
+                            if (problem.isAvailable()) problems.add(problem);
+                        }
+                        showCards(problems);
+                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+            new Handler().postDelayed(() -> {
+                swipeRefresh.setRefreshing(false);
+                linearLayout.removeAllViews();
+            }, 2000);
+        });
 
     } //onViewCreated()
 
+    public void init() {
+        shimmerFrameLayout = getView().findViewById(R.id.shimmerLayout);
+        linearLayout = getView().findViewById(R.id.ll_shimmer);
+        welcome = Objects.requireNonNull(getView()).findViewById(R.id.welcome);
+        level = Objects.requireNonNull(getView()).findViewById(R.id.level);
+        asked = Objects.requireNonNull(getView()).findViewById(R.id.asked);
+        solved = Objects.requireNonNull(getView()).findViewById(R.id.solved);
+        nestedScrollView = getView().findViewById(R.id.n_scrollview);
+        swipeRefresh = getView().findViewById(R.id.swipeRefreshLayout);
+    }
+
+    public void shimmerLoading(int size) {
+        /*Add shimmer loading effect on start*/
+        for (int i = 0; i < size; i++) {
+            View child = getLayoutInflater().inflate(R.layout.home_card_shimmer, null);
+            linearLayout.addView(child);
+        }
+    }
+    // shimmerLoading
+
     /*  Show cards on Homescreen using RecyclerView. Firebase doesn't provide descending order query,
-        so I will have to reverse the list order.*/
+        so I will have to reverse the list order. */
     public void showCards(List<Problem> problems) {
         RecyclerView recyclerView = getView().findViewById(R.id.rvHomeCard);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -123,22 +163,39 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
         recyclerView.setAdapter(adapter);
     } //showCards()
 
-    //Save total post in local data. AskFragment will use the total number as post ID
-    public void sendTotal(int total) {
-        PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .edit()
-                .putInt("postTotal", total).apply(); //TODO: fix the cleared DB bug!
-    } //sendTotal()
+    /* Increment view if a post is viewed. Send title and desc to detail via intent. */
+    @Override
+    public void onItemClick(View view, int position) {
+        incrementView(position);
 
-    //Get data from DB with ListenerForSingleValueEvent
-    public List<Problem> getDB(Query query, List<Problem> list) {
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Send data to DetailActivity
+        Intent i = new Intent(getActivity(), DetailActivity.class);
+        try {
+            i.putExtra("imgurl", adapter.getItem(position).getImgUrl());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        i.putExtra("id", adapter.getItem(position).getId());
+        i.putExtra("title", adapter.getItem(position).getTitleProblem());
+        i.putExtra("desc", adapter.getItem(position).getDescProblem());
+        i.putExtra("poster", adapter.getItem(position).getPoster());
+        i.putExtra("timestamp", adapter.getItem(position).getTime());
+        startActivity(i);
+    }
+
+    public void incrementView(int position) {
+        long time = adapter.getItem(position).getTime();
+        int seen = adapter.getItem(position).getSeen() + 1;
+
+        databaseProblems.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Problem problem = dataSnapshot.getValue(Problem.class);
-                        list.add(problem);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Problem problem = snapshot.getValue(Problem.class);
+                    if (problem.getTime() == time) {
+                        problem.setSeen(seen);
+                        databaseProblems.child(snapshot.getKey()).setValue(problem);
+                        databaseProblems.removeEventListener(this);
                     }
                 }
             }
@@ -146,27 +203,9 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
-        }); //Get User's Post
-        return list;
-    } //getDB()
+        });
 
-
-    //Increment view if a post is viewed. Send title and desc to detail via intent.
-    @Override
-    public void onItemClick(View view, int position) {
-        String title = adapter.getItem(position).getTitleProblem();
-        String desc = adapter.getItem(position).getDescProblem();
-        int id = adapter.getItem(position).getId();
-        int seen = adapter.getItem(position).getSeen();
-        seen++;
-
-        databaseProblems.child(String.valueOf(id)).child("seen").setValue(seen);
-//        Toast.makeText(getActivity(), adapter.getItem(position).getTitleProblem() + " viewed", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra("title", title);
-        intent.putExtra("desc", desc);
-        startActivity(intent);
-    }
+    } //incrementView();
 
     public void scrollToTop() {
         nestedScrollView.fullScroll(NestedScrollView.FOCUS_UP);

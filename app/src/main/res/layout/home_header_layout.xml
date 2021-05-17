@@ -80,6 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Level "
+            android:fontFamily="@font/orkney_light"
             android:textColor="@color/teal"
             android:textSize="20sp" />
 
@@ -87,6 +88,7 @@
             android:id="@+id/level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/orkney_light"
             android:text="1"
             android:textColor="@color/teal"
             android:textSize="20sp" />
@@ -105,9 +107,9 @@
             android:id="@+id/asked"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:fontFamily="@font/orkney_bold"
             android:text="0"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:textSize="25sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -131,7 +133,7 @@
             android:layout_height="match_parent"
             android:text="0"
             android:textSize="25sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/orkney_bold"/>
 
         <TextView
             android:layout_width="wrap_content"
