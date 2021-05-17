@@ -12,7 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UseIt">
 
-        <activity android:name=".Profile"></activity>
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
