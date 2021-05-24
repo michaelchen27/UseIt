@@ -236,7 +236,7 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.ItemC
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for ( DataSnapshot snapshot2 : dataSnapshot.getChildren()){
                     Problem prob = snapshot2.getValue(Problem.class);
-                    if(prob.getId() == id){
+                    if(prob.getId() == id || prob.getTime() == time){
                         prob.setAvailable(true);
                         databaseProblems.child(snapshot2.getKey()).setValue(prob);
                         databaseProblems.removeEventListener(this);
