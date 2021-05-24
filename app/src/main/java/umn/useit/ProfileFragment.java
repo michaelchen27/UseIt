@@ -70,6 +70,7 @@ public class ProfileFragment extends Fragment {
         FirebaseUser curr_user = FirebaseAuth.getInstance().getCurrentUser();
 
         String curr_userUid = curr_user.getUid();
+        String email = curr_user.getEmail();
         DatabaseReference userRow = databaseUsers.child(curr_userUid);
 
         profile_name = getView().findViewById(R.id.profile_name);
@@ -125,7 +126,7 @@ public class ProfileFragment extends Fragment {
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Problem problem = dataSnapshot.getValue(Problem.class);
-                        if (problem.isAvailable()) problems.add(problem);
+                        if (problem.getPoster().equals(email)) problems.add(problem);
                     }
                     showCards(problems);
                 }
