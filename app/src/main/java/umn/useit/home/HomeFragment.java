@@ -87,6 +87,7 @@ public class HomeFragment extends Fragment implements HomeCardAdapter.ItemClickL
             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
                 User user = mutableData.getValue(User.class);
                 return Transaction.success(mutableData);
+                
             }
 
             @Override

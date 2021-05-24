@@ -90,6 +90,13 @@
 
 
     </androidx.cardview.widget.CardView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvProfileCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/profile_card"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
 
     <Button
         android:id="@+id/btn_logout"
