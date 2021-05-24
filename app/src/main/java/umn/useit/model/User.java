@@ -2,17 +2,18 @@ package umn.useit.model;
 
 public class User {
 
-    private String firstname, lastname, email;
+    private String firstname, lastname, email, profImg;
     private int asked, solved;
 
     User(){}
 
-    public User(String firstname, String lastname, String email, int asked, int solved) {
+    public User(String firstname, String lastname, String email, int asked, int solved, String profImg) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.asked = asked;
         this.solved = solved;
+        this.profImg = profImg;
     }
 
     public String getFirstname() {
@@ -38,5 +39,9 @@ public class User {
 
     public int getSolved() {
         return solved;
+    }
+
+    public String getImg(){
+        return profImg;
     }
 }

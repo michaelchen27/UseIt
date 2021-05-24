@@ -29,7 +29,7 @@ import umn.useit.R;
 import umn.useit.model.User;
 
 public class SignUpActivity extends AppCompatActivity {
-    public String firstname, lastname, email;
+    public String firstname, lastname, email, profPic="A";
     private ProgressBar spinner;
 
     @Override
@@ -104,7 +104,7 @@ public class SignUpActivity extends AppCompatActivity {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference dbUser = db.getReference().child("Users");
 
-        User user = new User(firstname, lastname, email, 0, 0);
+        User user = new User(firstname, lastname, email, 0, 0, profPic);
 
         dbUser.child(userUid).setValue(user);
     }
